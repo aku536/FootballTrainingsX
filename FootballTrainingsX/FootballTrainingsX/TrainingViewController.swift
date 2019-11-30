@@ -14,28 +14,25 @@ protocol TrainingViewDelegate {
 
 class TrainingViewController: UIViewController {
     
-    private var urlString: String // ссылка на видео
-    private var trainingIndex: Int // номер ячейки, с которой осуществлялся переход
+    var urlString = "" // ссылка на видео
+    var trainingIndex: Int? // номер ячейки, с которой осуществлялся переход
     var delegate: TrainingViewDelegate?
-    
-    /// При инициализации необходимо указать ссылку на видео и номер упражнения по порядку
-    ///
-    /// - Parameters:
-    ///   - urlString: ссылка на видео
-    ///   - index: номер ячейки, с которой осуществлялся переход
-    init(urlString: String, index: Int) {
-        self.urlString = urlString
-        self.trainingIndex = index
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width*9/16)
+        let pv = PlayerView(frame: frame, urlString: urlString)
+        playerView.addSubview(pv)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        playerView.subviews.first?.removeFromSuperview()
     }
     
     // MARK: - Создание элементов view
@@ -48,9 +45,8 @@ class TrainingViewController: UIViewController {
         return label
     }()
     
-    private lazy var playerView: UIView = {
-        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width*9/16)
-        let playerView = PlayerView(frame: frame, urlString: urlString)
+    private var playerView: UIView = {
+        let playerView = UIView()
         playerView.translatesAutoresizingMaskIntoConstraints = false
         return playerView
     }()
@@ -184,11 +180,11 @@ class TrainingViewController: UIViewController {
     
     // Говорит делегату сохранить данные и убирает view с экрана
     @objc private func save() {
-        guard let text = repsTextField.text, let numberOfReps = Int(text) else {
+        guard let text = repsTextField.text, let numberOfReps = Int(text), let index = trainingIndex else {
             navigationController?.popViewController(animated: true)
             return
         }
-        delegate?.save(numberOfReps: numberOfReps, at: trainingIndex)
+        delegate?.save(numberOfReps: numberOfReps, at: index)
         navigationController?.popViewController(animated: true)
     }
     

@@ -17,7 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         CoreDataStack.shared.firstLaunchSettings()
         
+        let trainingVC = TrainingViewController()
         let trainingsListVC = TrainingsListViewController()
+        trainingsListVC.trainingVC = trainingVC
         let navigationController = UINavigationController(rootViewController: trainingsListVC)
         navigationController.navigationBar.barStyle = .black
         

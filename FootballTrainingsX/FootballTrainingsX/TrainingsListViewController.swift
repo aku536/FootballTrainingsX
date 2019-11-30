@@ -14,11 +14,16 @@ class TrainingsListViewController: UIViewController {
     
     private let reuseID = "TrainingCell"
     private let stack = CoreDataStack.shared
+    var trainingVC: TrainingViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         trainings = stack.loadFromMemory()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setupUI()
     }
     
@@ -59,9 +64,13 @@ extension TrainingsListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension TrainingsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let trainingVC = trainingVC else {
+            return
+        }
         let training = trainings[indexPath.row]
-        let trainingVC = TrainingViewController(urlString: training.urlString, index: indexPath.row)
         let attributedText = makeAttributedText(from: training.type)
+        trainingVC.trainingIndex = indexPath.row
+        trainingVC.urlString = training.urlString
         trainingVC.titleLabel.attributedText = attributedText
         trainingVC.descriptionTextView.text = training.trainingDescription
         trainingVC.delegate = self

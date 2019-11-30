@@ -13,8 +13,8 @@ class PlayerView: UIView {
     
     private var player: AVPlayer?
     private var isPlaying = false // играет ли видео в данный момент
-    var urlString: String
-    let timeFormatter = TimeFormatter() // помогает преобразовавать время в строку
+    private var urlString: String
+    private let timeFormatter = TimeFormatter() // помогает преобразовавать время в строку
     
     init(frame: CGRect, urlString: String) {
         self.urlString = urlString
@@ -128,12 +128,12 @@ class PlayerView: UIView {
         player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
         
         let interval = CMTime(value: 1, timescale: 2)
-        player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { (currentTime) in
+        player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { [weak self] (currentTime) in
             let seconds = CMTimeGetSeconds(currentTime)
-            self.currentTimeLabel.text = self.timeFormatter.transformTimeToString(seconds: seconds)
-            if let duration = self.player?.currentItem?.duration {
+            self?.currentTimeLabel.text = self?.timeFormatter.transformTimeToString(seconds: seconds)
+            if let duration = self?.player?.currentItem?.duration {
                 let durationSeconds = CMTimeGetSeconds(duration)
-                self.progressTracker.value = Float(seconds/durationSeconds)
+                self?.progressTracker.value = Float(seconds/durationSeconds)
             }
         })
     }
@@ -149,9 +149,14 @@ class PlayerView: UIView {
     
     // Ставит плеер на паузу / возобновляет проигрывание
     @objc private func handlePause() {
+        player?.pause()
         if isPlaying {
-            player?.pause()
-            pausePlayButton.setImage(UIImage(named: "play"), for: .normal)
+            UIView.transition(with: pausePlayButton,
+                              duration: 0.5,
+                              options: .transitionFlipFromLeft,
+                              animations: {
+                                self.pausePlayButton.setImage(UIImage(named: "play"), for: .normal)
+            })
         } else {
             player?.play()
             playerControlsView.isHidden = true
@@ -172,6 +177,11 @@ class PlayerView: UIView {
     
     // Прячет или показывает элементы управления плеером
     @objc private func showOrHideControlsOnTap() {
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = CATransitionType.fade
+        playerControlsView.layer.add(transition, forKey: nil)
+
         playerControlsView.isHidden = !playerControlsView.isHidden
     }
     
