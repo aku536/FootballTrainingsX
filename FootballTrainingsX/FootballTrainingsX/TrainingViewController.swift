@@ -25,6 +25,10 @@ class TrainingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        addPlayerView()
+    }
+    
+    private func addPlayerView() {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width*9/16)
         let pv = PlayerView(frame: frame, urlString: urlString)
         playerView.addSubview(pv)
