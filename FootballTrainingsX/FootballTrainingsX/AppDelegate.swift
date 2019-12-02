@@ -17,15 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         CoreDataStack.shared.firstLaunchSettings()
         
-        let trainingVC = TrainingViewController()
         let trainingsListVC = TrainingsListViewController()
-        trainingsListVC.trainingVC = trainingVC
         let navigationController = UINavigationController(rootViewController: trainingsListVC)
         navigationController.navigationBar.barStyle = .black
+        navigationController.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 1)
+        
+        let statsVC = StatsViewController()
+        statsVC.tabBarItem = UITabBarItem(tabBarSystemItem: .history, tag: 2)
         
         let tabBarController = UITabBarController()
         tabBarController.tabBar.barStyle = .black
-        tabBarController.viewControllers = [navigationController]
+        tabBarController.viewControllers = [navigationController, statsVC]
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = tabBarController

@@ -13,21 +13,17 @@ class TrainingsListViewController: UIViewController {
     private var trainings = [MOTraining]() // футбольные упражнения
     private let reuseID = "TrainingCell"
     private let stack = CoreDataStack.shared
-    var trainingVC: TrainingViewController?
     
     // MARK: - ViewController lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         trainings = stack.loadFromMemory()
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         setupUI()
     }
     
     private func setupUI() {
-        self.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 1)
+        title = "Выберите тренировку"
         
         let tableView = UITableView(frame: CGRect(x: 0,
                                                   y: 0,
@@ -63,11 +59,9 @@ extension TrainingsListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension TrainingsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let trainingVC = trainingVC else {
-            return
-        }
         let training = trainings[indexPath.row]
         let attributedText = makeAttributedText(from: training.type)
+        let trainingVC = TrainingViewController()
         trainingVC.trainingIndex = indexPath.row
         trainingVC.urlString = training.urlString
         trainingVC.titleLabel.attributedText = attributedText
@@ -90,8 +84,9 @@ extension TrainingsListViewController: UITableViewDelegate {
 
 // MARK: - TrainingViewDelegate
 extension TrainingsListViewController: TrainingViewDelegate {
-    func save(numberOfReps: Int, at index: Int) {
+    func save(numberOfReps: Int, successfulReps: Int, at index: Int) {
         trainings[index].numberOfReps += Int16(numberOfReps)
+        trainings[index].successfulReps += Int16(successfulReps)
         stack.save(trainings)
     }
 }

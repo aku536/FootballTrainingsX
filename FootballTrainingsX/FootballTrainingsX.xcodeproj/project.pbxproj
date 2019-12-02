@@ -29,6 +29,10 @@
 		024BDC23239163F90087174D /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024BDC18239160D00087174D /* TimeFormatter.swift */; };
 		024BDC2823916CAB0087174D /* TrainingModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 024BDBEF238D38230087174D /* TrainingModel.xcdatamodeld */; };
 		024BDC2A23916D570087174D /* CoreDataStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024BDC2923916D570087174D /* CoreDataStackTests.swift */; };
+		02C3FECA239501DC00B5EB05 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FEC8239500BC00B5EB05 /* StatsView.swift */; };
+		02C3FECB2395086A00B5EB05 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FEC8239500BC00B5EB05 /* StatsView.swift */; };
+		02C3FED02395536A00B5EB05 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FECF2395536A00B5EB05 /* StatsViewController.swift */; };
+		02C3FED12395564A00B5EB05 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FECF2395536A00B5EB05 /* StatsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +63,8 @@
 		024BDC18239160D00087174D /* TimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
 		024BDC1A239163DA0087174D /* TimeFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatterTests.swift; sourceTree = "<group>"; };
 		024BDC2923916D570087174D /* CoreDataStackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStackTests.swift; sourceTree = "<group>"; };
+		02C3FEC8239500BC00B5EB05 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		02C3FECF2395536A00B5EB05 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +123,7 @@
 			children = (
 				024BDBBA238BD6920087174D /* TrainingsListViewController.swift */,
 				024BDBFC238E661E0087174D /* TrainingViewController.swift */,
+				02C3FECF2395536A00B5EB05 /* StatsViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -154,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				024BDC15239156600087174D /* PlayerView.swift */,
+				02C3FEC8239500BC00B5EB05 /* StatsView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -259,6 +267,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				024BDBBB238BD6920087174D /* TrainingsListViewController.swift in Sources */,
+				02C3FED02395536A00B5EB05 /* StatsViewController.swift in Sources */,
+				02C3FECA239501DC00B5EB05 /* StatsView.swift in Sources */,
 				024BDC19239160D00087174D /* TimeFormatter.swift in Sources */,
 				024BDBFD238E661E0087174D /* TrainingViewController.swift in Sources */,
 				024BDBA9238BCFC50087174D /* AppDelegate.swift in Sources */,
@@ -275,7 +285,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				024BDC21239163F90087174D /* CoreDataStack.swift in Sources */,
+				02C3FECB2395086A00B5EB05 /* StatsView.swift in Sources */,
 				024BDC2823916CAB0087174D /* TrainingModel.xcdatamodeld in Sources */,
+				02C3FED12395564A00B5EB05 /* StatsViewController.swift in Sources */,
 				024BDC23239163F90087174D /* TimeFormatter.swift in Sources */,
 				024BDC1F239163F90087174D /* TrainingViewController.swift in Sources */,
 				024BDC1D239163F90087174D /* PlayerView.swift in Sources */,

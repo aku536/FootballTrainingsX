@@ -9,19 +9,34 @@
 import UIKit
 
 protocol TrainingViewDelegate {
-    func save(numberOfReps: Int, at index: Int)
+    func save(numberOfReps: Int, successfulReps: Int, at index: Int)
 }
 
-class TrainingViewController: UIViewController {
+class TrainingViewController: UIViewController, StatsViewDelegate {
     
     var urlString = "" // ссылка на видео
     var trainingIndex: Int? // номер ячейки, с которой осуществлялся переход
     var delegate: TrainingViewDelegate?
     
     // MARK: - ViewController lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification,
+                                               object: nil,
+                                               queue: nil) { _ in
+                                                self.view.frame.origin = CGPoint(x: 0, y: -200)
+        }
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification,
+                                               object: nil,
+                                               queue: nil) { _ in
+                                                self.view.frame.origin = CGPoint(x: 0, y: 0)
+        }
+        setupUI()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupUI()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,37 +73,30 @@ class TrainingViewController: UIViewController {
         return textView
     }()
     
-    private let stepper: UIStepper = {
-        let stepper = UIStepper()
-        stepper.translatesAutoresizingMaskIntoConstraints = false
-        stepper.addTarget(self, action: #selector(stepperValueDidChanged(_:)), for: .touchUpInside)
-        stepper.minimumValue = 0
-        stepper.maximumValue = Double(Int16.max)
-        return stepper
+    private let repsView: StatsView = {
+        let view = StatsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.exerciseTitle = "Повторы"
+        return view
     }()
     
-    private let repsTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.backgroundColor = UIColor.rgb(red: 40, green: 40, blue: 40)
-        textField.textAlignment = .right
-        textField.text = "0"
-        textField.textColor = .white
-        textField.keyboardType = .decimalPad
-        textField.borderStyle = .roundedRect
-        
-        let title = UILabel()
-        let text = "Повторы"
-        let width = text.width(withConstrainedHeight: 29, font: title.font)
-        title.text = text
-        title.textColor = .lightGray
-        title.textAlignment = .center
-        title.frame = CGRect(x: 15, y: 0, width: width + 15, height: 20)
-        textField.leftView = title
-        textField.leftViewMode = .always
-        
-        textField.addTarget(self, action: #selector(textFieldDidChanged(_:)), for: .editingChanged)
-        return textField
+    private let successfulRepsView: StatsView = {
+        let view = StatsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.exerciseTitle = "Успешные повторы"
+        return view
+    }()
+    
+    private let percantageLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = UIColor.rgb(red: 40, green: 40, blue: 40)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.textAlignment = .center
+        label.text = "0%"
+        label.layer.cornerRadius = 15
+        label.layer.masksToBounds = true
+        return label
     }()
     
     private let saveButton: UIButton = {
@@ -107,16 +115,18 @@ class TrainingViewController: UIViewController {
     // Добавление элементов на view и настройка анкоров
     private func setupUI() {
         view.backgroundColor = .black
+        title = "Запишите свои результаты"
         
         let offsetFromNavBar = navigationController?.navigationBar.frame.maxY ?? 60
         let offsetFromTabBar = tabBarController?.tabBar.frame.height ?? view.frame.maxY
         let yOffset: CGFloat = 15
         let xOffset: CGFloat = 25
         let width = view.frame.width - 2 * xOffset
+        let height: CGFloat = 40
         
         view.addSubview(titleLabel)
         titleLabel.widthAnchor.constraint(equalToConstant: width).isActive = true
-        titleLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        titleLabel.heightAnchor.constraint(equalToConstant: height).isActive = true
         titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: offsetFromNavBar + yOffset).isActive = true
         
@@ -126,35 +136,37 @@ class TrainingViewController: UIViewController {
         playerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         playerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: yOffset).isActive = true
         addPlayerView()
-
+        
         view.addSubview(saveButton)
         saveButton.widthAnchor.constraint(equalToConstant: width).isActive = true
-        saveButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: height).isActive = true
         saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         saveButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -offsetFromTabBar - yOffset).isActive = true
         
-        view.addSubview(stepper)
-        stepper.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -xOffset).isActive = true
-        stepper.bottomAnchor.constraint(equalTo: saveButton.topAnchor, constant: -yOffset).isActive = true
+        view.addSubview(percantageLabel)
+        percantageLabel.widthAnchor.constraint(equalToConstant: width).isActive = true
+        percantageLabel.heightAnchor.constraint(equalToConstant: height).isActive = true
+        percantageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        percantageLabel.bottomAnchor.constraint(equalTo: saveButton.topAnchor, constant: -yOffset).isActive = true
         
-        view.addSubview(repsTextField)
-        repsTextField.delegate = self
-        repsTextField.heightAnchor.constraint(equalToConstant: 29).isActive = true
-        repsTextField.rightAnchor.constraint(equalTo: stepper.leftAnchor, constant: -xOffset).isActive = true
-        repsTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: xOffset).isActive = true
-        repsTextField.bottomAnchor.constraint(equalTo: saveButton.topAnchor, constant: -yOffset).isActive = true
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification,
-                                               object: nil, queue: nil) { _ in
-            self.view.frame.origin = CGPoint(x: 0, y: -200)
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification,
-                                               object: nil, queue: nil) { _ in
-            self.view.frame.origin = CGPoint(x: 0, y: 0)
-        }
+        view.addSubview(successfulRepsView)
+        successfulRepsView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        successfulRepsView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        successfulRepsView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        successfulRepsView.bottomAnchor.constraint(equalTo: percantageLabel.topAnchor, constant: -5).isActive = true
+        successfulRepsView.delegate = self
+        
+        
+        view.addSubview(repsView)
+        repsView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        repsView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        repsView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        repsView.bottomAnchor.constraint(equalTo: successfulRepsView.topAnchor, constant: -5).isActive = true
+        repsView.delegate = self
         
         view.addSubview(descriptionTextView)
         descriptionTextView.widthAnchor.constraint(equalToConstant: width).isActive = true
-        descriptionTextView.bottomAnchor.constraint(equalTo: repsTextField.topAnchor, constant: -yOffset).isActive = true
+        descriptionTextView.bottomAnchor.constraint(equalTo: repsView.topAnchor, constant: -yOffset).isActive = true
         descriptionTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         descriptionTextView.topAnchor.constraint(equalTo: playerView.bottomAnchor, constant: yOffset).isActive = true
     }
@@ -165,36 +177,33 @@ class TrainingViewController: UIViewController {
         playerView.addSubview(pv)
     }
     
-    // Меняет текст при изменении значения степпера
-    @objc private func stepperValueDidChanged(_ sender: UIStepper) {
-        repsTextField.text = "\(Int(sender.value))"
-    }
-    
-    // Меняет значение степпера при изменении значения текста
-    @objc private func textFieldDidChanged(_ sender: UITextField) {
-        guard let text = sender.text, let textToInt = Int(text) else {
-            stepper.value = 0.0
-            return
-        }
-        stepper.value = Double(textToInt)
-    }
-    
     // Говорит делегату сохранить данные и убирает view с экрана
     @objc private func save() {
-        guard let text = repsTextField.text, let numberOfReps = Int(text), let index = trainingIndex else {
-            navigationController?.popViewController(animated: true)
+        if let index = trainingIndex,
+            let repsString = repsView.textField.text, let numberOfReps = Int(repsString),
+            let successString = successfulRepsView.textField.text, let successfulReps = Int(successString) {
+            delegate?.save(numberOfReps: numberOfReps, successfulReps: successfulReps, at: index)
+        }
+        navigationController?.popViewController(animated: true)
+    }
+    
+    /// При изменении введенных результатов тренировки, считаем процент успешных выполнений
+    func updatePercantage() {
+        if let repsString = repsView.textField.text,
+            let successString = successfulRepsView.textField.text,
+            let reps = Double(repsString),
+            let success = Double(successString),
+            success > 0,
+            reps > 0 {
+            percantageLabel.text = "\(Int(success/reps*100))%"
+        }
+        else {
+            percantageLabel.text = "0%"
             return
         }
-        delegate?.save(numberOfReps: numberOfReps, at: index)
-        navigationController?.popViewController(animated: true)
+        
     }
     
 }
 
-// MARK: - UITextFieldDelegate
-extension TrainingViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-}
+
