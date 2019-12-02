@@ -27,7 +27,7 @@ class CoreDataStackTests: XCTestCase {
         // arrange
         let coreDataStack2 = CoreDataStack.shared
         
-        // action
+        // act
         let isEqual = coreDataStack === coreDataStack2
         
         // assert

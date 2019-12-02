@@ -18,6 +18,7 @@ class TrainingViewController: UIViewController {
     var trainingIndex: Int? // номер ячейки, с которой осуществлялся переход
     var delegate: TrainingViewDelegate?
     
+    // MARK: - ViewController lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupUI()
@@ -190,6 +191,7 @@ class TrainingViewController: UIViewController {
     
 }
 
+// MARK: - UITextFieldDelegate
 extension TrainingViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

@@ -9,19 +9,18 @@
 import UIKit
 
 class TrainingsListViewController: UIViewController {
-    
+    // MARK: - Переменные
     private var trainings = [MOTraining]() // футбольные упражнения
-    
     private let reuseID = "TrainingCell"
     private let stack = CoreDataStack.shared
     var trainingVC: TrainingViewController?
     
+    // MARK: - ViewController lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         trainings = stack.loadFromMemory()
     }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupUI()

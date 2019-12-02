@@ -27,7 +27,7 @@ class TimeFormatterTests: XCTestCase {
         // arrange
         let seconds = Float64(100)
         
-        // action
+        // act
         let timeString = timeFormatter.transformTimeToString(seconds: seconds)
         
         // assert

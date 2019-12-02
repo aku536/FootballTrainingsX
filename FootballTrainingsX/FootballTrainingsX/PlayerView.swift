@@ -10,12 +10,13 @@ import UIKit
 import AVFoundation
 
 class PlayerView: UIView {
-    
+    // MARK: - Переменные
     private var player: AVPlayer?
     private var isPlaying = false // играет ли видео в данный момент
     private var urlString: String
     private let timeFormatter = TimeFormatter() // помогает преобразовавать время в строку
     
+    // MARK: - Инициализация
     init(frame: CGRect, urlString: String) {
         self.urlString = urlString
         super.init(frame: frame)
@@ -26,6 +27,7 @@ class PlayerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Создание элементов UI
     private let playerControlsView: UIView = {
         var controlsView = UIView()
         controlsView.backgroundColor = .black
@@ -114,6 +116,8 @@ class PlayerView: UIView {
         progressTracker.rightAnchor.constraint(equalTo: videoLengthLabel.leftAnchor).isActive = true
         progressTracker.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
+    
+    // MARK: - Приватные методы
     
     // Добавляет плеер и два обозревателя
     private func setupPlayerView() {
