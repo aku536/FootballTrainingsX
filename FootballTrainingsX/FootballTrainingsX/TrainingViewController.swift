@@ -18,20 +18,9 @@ class TrainingViewController: UIViewController {
     var trainingIndex: Int? // номер ячейки, с которой осуществлялся переход
     var delegate: TrainingViewDelegate?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        addPlayerView()
-    }
-    
-    private func addPlayerView() {
-        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width*9/16)
-        let pv = PlayerView(frame: frame, urlString: urlString)
-        playerView.addSubview(pv)
+        setupUI()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -135,6 +124,7 @@ class TrainingViewController: UIViewController {
         playerView.heightAnchor.constraint(equalToConstant: view.frame.width*9/16).isActive = true
         playerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         playerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: yOffset).isActive = true
+        addPlayerView()
 
         view.addSubview(saveButton)
         saveButton.widthAnchor.constraint(equalToConstant: width).isActive = true
@@ -166,6 +156,12 @@ class TrainingViewController: UIViewController {
         descriptionTextView.bottomAnchor.constraint(equalTo: repsTextField.topAnchor, constant: -yOffset).isActive = true
         descriptionTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         descriptionTextView.topAnchor.constraint(equalTo: playerView.bottomAnchor, constant: yOffset).isActive = true
+    }
+    
+    private func addPlayerView() {
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width*9/16)
+        let pv = PlayerView(frame: frame, urlString: urlString)
+        playerView.addSubview(pv)
     }
     
     // Меняет текст при изменении значения степпера
