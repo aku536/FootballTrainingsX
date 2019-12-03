@@ -31,13 +31,24 @@ final class CoreDataStack {
     /// Загружаем имеющиеся данные из памяти
     ///
     /// - Returns: возвращаем массив с Футбольными тренировками
-    func loadFromMemory() -> [MOTraining] {
+    func loadFromMemory() -> [Training] {
+        var loadedTrainings = [Training]()
         let managedContext = persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Training")
-        var trainings = [MOTraining]()
         do {
-            trainings = try managedContext.fetch(fetchRequest) as! [MOTraining]
-            return trainings
+            guard let trainings = try managedContext.fetch(fetchRequest) as? [MOTraining] else {
+                return []
+            }
+            for training in trainings {
+                let type = training.value(forKey: "type") as? String ?? ""
+                let trainingDescription = training.value(forKey: "trainingDescription") as? String ?? ""
+                let numberOfReps = training.value(forKey: "numberOfReps") as? Int16 ?? 0
+                let successfulReps = training.value(forKey: "successfulReps") as? Int16 ?? 0
+                let urlString = training.value(forKey: "urlString") as? String ?? ""
+                let loadedTraining = Training(type: type, trainingDescription: trainingDescription, numberOfReps: numberOfReps, successfulReps: successfulReps, urlString: urlString)
+                loadedTrainings.append(loadedTraining)
+            }
+            return loadedTrainings
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
             return []
@@ -49,23 +60,22 @@ final class CoreDataStack {
         try! persistentContainer.viewContext.execute(NSBatchDeleteRequest(fetchRequest: NSFetchRequest(entityName: "Training")))
     }
     
-    /// Сохранение тренировок в
+    /// Сохранение тренировок в память
     ///
-    /// - Parameter trainings: массив футбольных тренировок
-    func save(_ trainings: [MOTraining]) {
-        clearData()
+    /// - Parameter training: футбольное упражнение
+    func save(_ training: Training) {
         persistentContainer.performBackgroundTask { (context) in
-            for trainingToSave in trainings {
-                let training = MOTraining(context: context)
-                training.type = trainingToSave.type
-                training.trainingDescription = trainingToSave.trainingDescription
-                training.urlString = trainingToSave.urlString
-                training.numberOfReps = trainingToSave.numberOfReps
-                try? context.save()
-            }
+            self.clearData()
+            let objectToSave = MOTraining(context: context)
+            objectToSave.type = training.type
+            objectToSave.trainingDescription = training.trainingDescription
+            objectToSave.urlString = training.urlString
+            objectToSave.numberOfReps = training.numberOfReps
+            objectToSave.successfulReps = training.successfulReps
+            try? context.save()
         }
     }
-
+    
     /// Загрузка дефолтных значений из хранилища при первом запуске приложения
     func firstLaunchSettings() {
         let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")

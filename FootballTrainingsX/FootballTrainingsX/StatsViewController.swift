@@ -10,7 +10,7 @@ import UIKit
 
 class StatsViewController: UIViewController {
     
-    private var trainings = [MOTraining]() // футбольные упражнения
+    private var trainings = [Training]() // футбольные упражнения
     private let reuseID = "TrainingCell"
     private let stack = CoreDataStack.shared
     

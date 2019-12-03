@@ -10,7 +10,7 @@ import UIKit
 
 class TrainingsListViewController: UIViewController {
     // MARK: - Переменные
-    private var trainings = [MOTraining]() // футбольные упражнения
+    private var trainings = [Training]() // футбольные упражнения
     private let reuseID = "TrainingCell"
     private let stack = CoreDataStack.shared
     
@@ -87,6 +87,8 @@ extension TrainingsListViewController: TrainingViewDelegate {
     func save(numberOfReps: Int, successfulReps: Int, at index: Int) {
         trainings[index].numberOfReps += Int16(numberOfReps)
         trainings[index].successfulReps += Int16(successfulReps)
-        stack.save(trainings)
+        for training in trainings {
+            stack.save(training)
+        }
     }
 }

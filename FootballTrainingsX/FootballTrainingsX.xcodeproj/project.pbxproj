@@ -33,6 +33,8 @@
 		02C3FECB2395086A00B5EB05 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FEC8239500BC00B5EB05 /* StatsView.swift */; };
 		02C3FED02395536A00B5EB05 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FECF2395536A00B5EB05 /* StatsViewController.swift */; };
 		02C3FED12395564A00B5EB05 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FECF2395536A00B5EB05 /* StatsViewController.swift */; };
+		02C3FED723963FCB00B5EB05 /* Training.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FED623963FCB00B5EB05 /* Training.swift */; };
+		02C3FED82396404900B5EB05 /* Training.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C3FED623963FCB00B5EB05 /* Training.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,7 @@
 		024BDC2923916D570087174D /* CoreDataStackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStackTests.swift; sourceTree = "<group>"; };
 		02C3FEC8239500BC00B5EB05 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		02C3FECF2395536A00B5EB05 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		02C3FED623963FCB00B5EB05 /* Training.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Training.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +144,7 @@
 		024BDBFB238E65D10087174D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				02C3FED623963FCB00B5EB05 /* Training.swift */,
 				024BDBED238D379F0087174D /* MOTraining.swift */,
 				024BDBEF238D38230087174D /* TrainingModel.xcdatamodeld */,
 			);
@@ -267,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				024BDBBB238BD6920087174D /* TrainingsListViewController.swift in Sources */,
+				02C3FED723963FCB00B5EB05 /* Training.swift in Sources */,
 				02C3FED02395536A00B5EB05 /* StatsViewController.swift in Sources */,
 				02C3FECA239501DC00B5EB05 /* StatsView.swift in Sources */,
 				024BDC19239160D00087174D /* TimeFormatter.swift in Sources */,
@@ -291,6 +296,7 @@
 				024BDC23239163F90087174D /* TimeFormatter.swift in Sources */,
 				024BDC1F239163F90087174D /* TrainingViewController.swift in Sources */,
 				024BDC1D239163F90087174D /* PlayerView.swift in Sources */,
+				02C3FED82396404900B5EB05 /* Training.swift in Sources */,
 				024BDC22239163F90087174D /* Extensions.swift in Sources */,
 				024BDC1C239163F90087174D /* AppDelegate.swift in Sources */,
 				024BDC1E239163F90087174D /* TrainingsListViewController.swift in Sources */,
