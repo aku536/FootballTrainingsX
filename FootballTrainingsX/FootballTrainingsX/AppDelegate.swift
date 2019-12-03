@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         CoreDataStack.shared.firstLaunchSettings()
         
-        let trainingsListVC = TrainingsListViewController()
+        let trainingsListVC = ExerciseListViewController()
         let navigationController = UINavigationController(rootViewController: trainingsListVC)
         navigationController.navigationBar.barStyle = .black
         navigationController.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 1)

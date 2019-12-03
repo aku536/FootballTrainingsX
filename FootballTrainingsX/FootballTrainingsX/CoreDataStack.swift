@@ -31,8 +31,8 @@ final class CoreDataStack {
     /// Загружаем имеющиеся данные из памяти
     ///
     /// - Returns: возвращаем массив с Футбольными тренировками
-    func loadFromMemory() -> [Training] {
-        var loadedTrainings = [Training]()
+    func loadFromMemory() -> [Exercise] {
+        var loadedTrainings = [Exercise]()
         let managedContext = persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Training")
         do {
@@ -45,7 +45,7 @@ final class CoreDataStack {
                 let numberOfReps = training.value(forKey: "numberOfReps") as? Int16 ?? 0
                 let successfulReps = training.value(forKey: "successfulReps") as? Int16 ?? 0
                 let urlString = training.value(forKey: "urlString") as? String ?? ""
-                let loadedTraining = Training(type: type, trainingDescription: trainingDescription, numberOfReps: numberOfReps, successfulReps: successfulReps, urlString: urlString)
+                let loadedTraining = Exercise(type: type, trainingDescription: trainingDescription, numberOfReps: numberOfReps, successfulReps: successfulReps, urlString: urlString)
                 loadedTrainings.append(loadedTraining)
             }
             return loadedTrainings
@@ -63,7 +63,7 @@ final class CoreDataStack {
     /// Сохранение тренировок в память
     ///
     /// - Parameter training: футбольное упражнение
-    func save(_ training: Training) {
+    func save(_ training: Exercise) {
         persistentContainer.performBackgroundTask { (context) in
             self.clearData()
             let objectToSave = MOTraining(context: context)

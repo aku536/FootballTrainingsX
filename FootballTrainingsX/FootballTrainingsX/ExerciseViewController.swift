@@ -1,5 +1,5 @@
 //
-//  TrainingViewController.swift
+//  ExerciseViewController.swift
 //  FootballTrainingsX
 //
 //  Created by Кирилл Афонин on 25/11/2019.
@@ -8,15 +8,15 @@
 
 import UIKit
 
-protocol TrainingViewDelegate {
+protocol ExerciseViewDelegate {
     func save(numberOfReps: Int, successfulReps: Int, at index: Int)
 }
 
-class TrainingViewController: UIViewController, StatsViewDelegate {
+class ExerciseViewController: UIViewController, StatsViewDelegate {
     
     var urlString = "" // ссылка на видео
-    var trainingIndex: Int? // номер ячейки, с которой осуществлялся переход
-    var delegate: TrainingViewDelegate?
+    var exerciseIndex: Int? // номер ячейки, с которой осуществлялся переход
+    var delegate: ExerciseViewDelegate?
     
     // MARK: - ViewController lifecycle
     override func viewDidLoad() {
@@ -31,17 +31,18 @@ class TrainingViewController: UIViewController, StatsViewDelegate {
                                                queue: nil) { _ in
                                                 self.view.frame.origin = CGPoint(x: 0, y: 0)
         }
-        setupUI()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        setupUI()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         playerView.subviews.first?.removeFromSuperview()
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Создание элементов view
@@ -179,7 +180,7 @@ class TrainingViewController: UIViewController, StatsViewDelegate {
     
     // Говорит делегату сохранить данные и убирает view с экрана
     @objc private func save() {
-        if let index = trainingIndex,
+        if let index = exerciseIndex,
             let repsString = repsView.textField.text, let numberOfReps = Int(repsString),
             let successString = successfulRepsView.textField.text, let successfulReps = Int(successString) {
             delegate?.save(numberOfReps: numberOfReps, successfulReps: successfulReps, at: index)
@@ -189,19 +190,9 @@ class TrainingViewController: UIViewController, StatsViewDelegate {
     
     /// При изменении введенных результатов тренировки, считаем процент успешных выполнений
     func updatePercantage() {
-        if let repsString = repsView.textField.text,
-            let successString = successfulRepsView.textField.text,
-            let reps = Double(repsString),
-            let success = Double(successString),
-            success > 0,
-            reps > 0 {
-            percantageLabel.text = "\(Int(success/reps*100))%"
+        if let success = successfulRepsView.textField.text, let reps = repsView.textField.text {
+            percantageLabel.text = PercentageCalculator.calculatePercenatge(count: success, total: reps)
         }
-        else {
-            percantageLabel.text = "0%"
-            return
-        }
-        
     }
     
 }

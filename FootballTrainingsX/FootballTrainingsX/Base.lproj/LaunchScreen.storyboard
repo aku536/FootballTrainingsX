@@ -17,13 +17,27 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="x1240" translatesAutoresizingMaskIntoConstraints="NO" id="Gmj-Pv-sTm">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Gmj-Pv-sTm" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="CXy-77-vpy"/>
+                            <constraint firstItem="Gmj-Pv-sTm" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="UwA-0N-Gyz"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Gmj-Pv-sTm" secondAttribute="trailing" id="jLf-Ou-cUo"/>
+                            <constraint firstItem="Gmj-Pv-sTm" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="wjU-Mg-rYU"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="52.173913043478265" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="x1240" width="1024" height="1024"/>
+    </resources>
 </document>

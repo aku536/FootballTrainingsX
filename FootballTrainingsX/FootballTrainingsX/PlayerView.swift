@@ -15,6 +15,7 @@ class PlayerView: UIView {
     private var isPlaying = false // играет ли видео в данный момент
     private var urlString: String
     private let timeFormatter = TimeFormatter() // помогает преобразовавать время в строку
+    private var timeObserver: Any?
     
     // MARK: - Инициализация
     init(frame: CGRect, urlString: String) {
@@ -29,6 +30,14 @@ class PlayerView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         setupUI()
+    }
+    
+    deinit {
+        if timeObserver != nil {
+            player?.removeTimeObserver(timeObserver as Any)
+        }
+        player?.removeObserver(self, forKeyPath: "currentItem.loadedTimeRanges")
+        player = nil
     }
     
     // MARK: - Создание элементов UI
@@ -136,7 +145,8 @@ class PlayerView: UIView {
         player?.addObserver(self, forKeyPath: "currentItem.loadedTimeRanges", options: .new, context: nil)
         
         let interval = CMTime(value: 1, timescale: 2)
-        player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { [weak self] (currentTime) in
+  
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { [weak self] (currentTime) in
             let seconds = CMTimeGetSeconds(currentTime)
             self?.currentTimeLabel.text = self?.timeFormatter.transformTimeToString(seconds: seconds)
             if let duration = self?.player?.currentItem?.duration {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Training {
+struct Exercise {
     
     var type: String // Название тренировки
     var trainingDescription: String // Описание
