@@ -2,96 +2,58 @@
 //  StatsView.swift
 //  FootballTrainingsX
 //
-//  Created by Кирилл Афонин on 02/12/2019.
+//  Created by Кирилл Афонин on 04/12/2019.
 //  Copyright © 2019 Кирилл Афонин. All rights reserved.
 //
 
 import UIKit
 
-protocol StatsViewDelegate {
-    func updatePercantage()
-}
-
 class StatsView: UIView {
-    
-    var exerciseTitle = ""
-    var delegate: StatsViewDelegate?
-    
+    // MARK: - Настройка UI
     override func layoutSubviews() {
         super.layoutSubviews()
         setupUI()
     }
     
-    private let stepper: UIStepper = {
-        let stepper = UIStepper()
-        
-        stepper.minimumValue = 0
-        stepper.maximumValue = Double(Int16.max)
-        return stepper
-    }()
-    
-    private lazy var title: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
-        let width = exerciseTitle.width(withConstrainedHeight: 29, font: label.font)
-        label.text = exerciseTitle
-        label.textColor = .lightGray
-        label.textAlignment = .center
-        label.frame = CGRect(x: 15, y: 0, width: width + 15, height: 20)
+        label.backgroundColor = .black
+        label.text = "Результаты"
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 40)
         return label
     }()
-
-    lazy var textField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.backgroundColor = UIColor.rgb(red: 40, green: 40, blue: 40)
-        textField.textAlignment = .right
-        textField.text = "0"
-        textField.textColor = .white
-        textField.keyboardType = .decimalPad
-        textField.borderStyle = .roundedRect
     
-        textField.leftView = title
-        textField.leftViewMode = .always
-        textField.rightView = stepper
-        stepper.addTarget(self, action: #selector(stepperValueDidChanged(_:)), for: .allTouchEvents)
-        textField.rightViewMode = .always
-        
-        textField.addTarget(self, action: #selector(textFieldDidChanged(_:)), for: .editingChanged)
-        return textField
+    /// Обнуление статистики
+    let resetButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "delete")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        return button
+    }()
+    
+    let tableView: UITableView = {
+        let tableView = UITableView(frame: .zero)
+        tableView.backgroundColor = .black
+        tableView.tableFooterView = UIView()
+        tableView.allowsSelection = false
+        return tableView
     }()
     
     private func setupUI() {
+        let offset: CGFloat = 25
+        let titleLabelWidth = frame.width - offset
+        let titleLabelHeight: CGFloat = titleLabel.text?.height(withConstrainedWidth: titleLabelWidth, font: titleLabel.font) ?? 70
+        let resetButtonHeight: CGFloat = 20
+        
         backgroundColor = .black
-        addSubview(textField)
-        textField.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        textField.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        textField.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        textField.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-    }
-    
-    // Меняет текст при изменении значения степпера
-    @objc private func stepperValueDidChanged(_ sender: UIStepper) {
-        textField.text = "\(Int(sender.value))"
-        delegate?.updatePercantage()
-    }
-    
-    // Меняет значение степпера при изменении значения текста
-    @objc private func textFieldDidChanged(_ sender: UITextField) {
-        guard let text = sender.text, let textToDouble = Double(text) else {
-            stepper.value = 0.0
-            delegate?.updatePercantage()
-            return
-        }
-        stepper.value = textToDouble
-        delegate?.updatePercantage()
-    }
-    
-}
-
-// MARK: - UITextFieldDelegate
-extension StatsView: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
+        
+        titleLabel.frame = CGRect(x: offset, y: 2 * offset, width: titleLabelWidth - 2*resetButtonHeight, height: titleLabelHeight)
+        addSubview(titleLabel)
+        
+        resetButton.frame = CGRect(x: titleLabel.frame.maxX, y: titleLabel.frame.minY + 15, width: resetButtonHeight, height: resetButtonHeight)
+        addSubview(resetButton)
+        
+        tableView.frame = CGRect(x: 0, y: titleLabel.frame.maxY + offset, width: frame.width , height: frame.height - titleLabel.frame.height)
+        addSubview(tableView)
     }
 }

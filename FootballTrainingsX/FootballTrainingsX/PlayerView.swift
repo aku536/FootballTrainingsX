@@ -177,8 +177,8 @@ class PlayerView: UIView {
             })
         } else {
             player?.play()
-            playerControlsView.isHidden = true
             pausePlayButton.setImage(UIImage(named: "pause"), for: .normal)
+            playerControlsView.isHidden = true
         }
         isPlaying = !isPlaying
     }

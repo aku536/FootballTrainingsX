@@ -15,12 +15,15 @@ class StatsTableViewCell: UITableViewCell {
     }
     
     // MARK: - настройка UI
+    
+    /// Иконка упражнения
     let exerciseImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
+    /// Название упражнения
     let exerciseLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -28,24 +31,30 @@ class StatsTableViewCell: UITableViewCell {
         return label
     }()
     
+    /// Процент успешности выполнения упражнения
     let percentageLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
         label.textColor = .white
         label.textAlignment = .center
         return label
     }()
     
+    /// Количество повторов
     let repsLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
         label.textColor = .white
         return label
     }()
     
+    /// Количество успешно выполненных подходов
     let successLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
         label.textColor = .white
         return label
     }()
@@ -53,6 +62,7 @@ class StatsTableViewCell: UITableViewCell {
     private func setupUI() {
         let offset: CGFloat = 10
         let width = frame.height - 2 * offset
+        let labelWidth: CGFloat = 125
         
         contentView.addSubview(exerciseImageView)
         exerciseImageView.widthAnchor.constraint(equalToConstant: width).isActive = true
@@ -62,12 +72,12 @@ class StatsTableViewCell: UITableViewCell {
         
         contentView.addSubview(repsLabel)
         repsLabel.heightAnchor.constraint(equalToConstant: frame.height/2 - offset).isActive = true
-        repsLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        repsLabel.widthAnchor.constraint(equalToConstant: labelWidth).isActive = true
         repsLabel.topAnchor.constraint(equalTo: topAnchor, constant: offset).isActive = true
         repsLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -offset).isActive = true
         
         contentView.addSubview(successLabel)
-        successLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        successLabel.widthAnchor.constraint(equalToConstant: labelWidth).isActive = true
         successLabel.topAnchor.constraint(equalTo: repsLabel.bottomAnchor, constant: offset/2).isActive = true
         successLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -offset).isActive = true
         successLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -offset).isActive = true

@@ -14,31 +14,58 @@ class StatsViewController: UIViewController {
     private let reuseID = "StatsCell"
     private let stack = CoreDataStack.shared
     
-    // MARK: - ViewController lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .gray
-        
-        tableView.backgroundColor = .black
-        tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: reuseID)
-        tableView.dataSource = self
-        tableView.delegate = self
-        view.addSubview(tableView)
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
+    // MARK: - ViewController lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         exercisesList.removeAll()
         exercisesList = stack.loadFromMemory()
-        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
-        tableView.reloadData()
-        
+        setupUI()
+        statsView.resetButton.addTarget(self, action: #selector(presentAlert), for: .touchUpInside)
     }
-    let tableView = UITableView(frame: CGRect(x: 0,
-                                              y: 0,
-                                              width: 0,
-                                              height: 0), style: .grouped)
-
+    
+    // MARK: - Настройка UI
+    private let statsView = StatsView()
+    
+    private func setupUI() {
+        statsView.frame = view.frame
+        view.addSubview(statsView)
+        
+        statsView.tableView.register(StatsTableViewCell.self, forCellReuseIdentifier: reuseID)
+        statsView.tableView.delegate = self
+        statsView.tableView.dataSource = self
+        statsView.tableView.reloadData()
+    }
+    
+    // MARK: - Приватные методы
+    
+    // Выводит предупреждении о сбросе статистики
+    @objc private func presentAlert() {
+        let alertController = UIAlertController(title: "Вы хотите сбросить всю статистику?", message: "Удаленные данные невозможно восстановить", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Сбросить",
+                                   style: .destructive,
+                                   handler: { (action: UIAlertAction) in
+                                    self.resetStats()
+                                    self.statsView.tableView.reloadData()
+        })
+        alertController.addAction(action)
+        
+        let cancel = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancel)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    // Обнуление статистики
+    private func resetStats() {
+        for index in exercisesList.indices {
+            exercisesList[index].numberOfReps = 0
+            exercisesList[index].successfulReps = 0
+            stack.save(exercisesList[index])
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -63,7 +90,6 @@ extension StatsViewController: UITableViewDataSource {
         cell.percentageLabel.text = PercentageCalculator.calculatePercenatge(count: String(successfulReps), total: String(reps))
         return cell
     }
-    
 }
 
 // MARK: - UITableViewDelegate

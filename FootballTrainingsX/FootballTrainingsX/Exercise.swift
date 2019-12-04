@@ -11,7 +11,7 @@ import Foundation
 struct Exercise {
     
     var type: String // Название тренировки
-    var trainingDescription: String // Описание
+    var exerciseDescription: String // Описание
     var numberOfReps: Int16 // Количество повторений
     var successfulReps: Int16 // Количество успешных повторений
     var urlString: String // Ссылка на видео

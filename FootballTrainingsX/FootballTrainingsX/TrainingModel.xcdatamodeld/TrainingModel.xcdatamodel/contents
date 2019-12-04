@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14492.1" systemVersion="18G103" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Training" representedClassName="MOTraining" syncable="YES">
+    <entity name="Exercise" representedClassName="MOExercise" syncable="YES">
+        <attribute name="exerciseDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="numberOfReps" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="successfulReps" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="trainingDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="urlString" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Training" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="Exercise" positionX="-63" positionY="-18" width="128" height="120"/>
     </elements>
 </model>

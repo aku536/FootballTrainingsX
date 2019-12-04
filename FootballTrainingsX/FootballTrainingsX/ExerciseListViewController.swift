@@ -15,37 +15,26 @@ class ExerciseListViewController: UIViewController {
     private let stack = CoreDataStack.shared
     
     // MARK: - ViewController lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        exercisesList = stack.loadFromMemory()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        exercisesList = stack.loadFromMemory()
         setupUI()
     }
     
     // MARK: - Настройка UI
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        tableView.backgroundColor = .black
-        tableView.tableFooterView = UIView()
-        tableView.register(ExerciseListTableViewCell.self, forCellReuseIdentifier: reuseID)
-        tableView.dataSource = self
-        tableView.delegate = self
-        return tableView
-    }()
+    private let exerciseListView = ExerciseListView()
     
     private func setupUI() {
-        title = "Выберите упражнение"
-        tableView.frame = CGRect(x: 0,
-                                 y: 0,
-                                 width: view.frame.width,
-                                 height: view.frame.height)
+        navigationController?.navigationBar.topItem?.title = "Выберите упражнение"
         
-        view.addSubview(tableView)
+        exerciseListView.frame = view.frame
+        view.addSubview(exerciseListView)
+        
+        exerciseListView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseID)
+        exerciseListView.tableView.dataSource = self
+        exerciseListView.tableView.delegate = self
     }
-
+    
 }
 
 // MARK: - UITableViewDataSource
@@ -55,7 +44,7 @@ extension ExerciseListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseID) as? ExerciseListTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseID) else {
             return UITableViewCell()
         }
         cell.backgroundColor = .darkGray
@@ -76,39 +65,12 @@ extension ExerciseListViewController: UITableViewDataSource {
 extension ExerciseListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let exercise = exercisesList[indexPath.row]
-        let attributedText = makeAttributedText(from: exercise.type)
-        let exerciseVC = ExerciseViewController()
-        exerciseVC.exerciseIndex = indexPath.row
-        exerciseVC.urlString = exercise.urlString
-        exerciseVC.titleLabel.attributedText = attributedText
-        exerciseVC.descriptionTextView.text = exercise.trainingDescription
-        exerciseVC.delegate = self
+        let exerciseVC = ExerciseViewController(exercise: exercise)
         navigationController?.pushViewController(exerciseVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    // Преобразуем текст для заголовка
-    private func makeAttributedText(from text: String) -> NSAttributedString {
-        let attributes: [NSAttributedString.Key : Any] = [
-            .foregroundColor : UIColor.white,
-            .underlineStyle : NSUnderlineStyle.single.rawValue,
-            .font : UIFont(name: "TimesNewRomanPS-BoldMT", size: 40)!
-        ]
-        return NSAttributedString(string: text, attributes: attributes)
-    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
-    }
-}
-
-// MARK: - TrainingViewDelegate
-extension ExerciseListViewController: ExerciseViewDelegate {
-    func save(numberOfReps: Int, successfulReps: Int, at index: Int) {
-        exercisesList[index].numberOfReps += Int16(numberOfReps)
-        exercisesList[index].successfulReps += Int16(successfulReps)
-        for exercise in exercisesList {
-            stack.save(exercise)
-        }
     }
 }

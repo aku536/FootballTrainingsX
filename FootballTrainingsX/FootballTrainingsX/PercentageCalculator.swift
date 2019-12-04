@@ -9,6 +9,12 @@
 import Foundation
 
 class PercentageCalculator {
+    ///
+    ///
+    /// - Parameters:
+    ///   - count: Количество успешно выполненных упражнений
+    ///   - total: Общее количество подходов
+    /// - Returns: Процент успешности в виде строки
     static func calculatePercenatge(count: String, total: String) -> String {
         if let count = Double(count),
             let total = Double(total),

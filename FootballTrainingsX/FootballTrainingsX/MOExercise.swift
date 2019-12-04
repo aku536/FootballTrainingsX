@@ -9,11 +9,11 @@
 import Foundation
 import CoreData
 
-@objc(MOTraining)
-internal class MOTraining: NSManagedObject {
+@objc(MOExercise)
+internal class MOExercise: NSManagedObject {
     
     @NSManaged var type: String // Название тренировки
-    @NSManaged var trainingDescription: String // Описание
+    @NSManaged var exerciseDescription: String // Описание
     @NSManaged var numberOfReps: Int16 // Количество повторений
     @NSManaged var successfulReps: Int16 // Количество успешных повторений
     @NSManaged var urlString: String // Ссылка на видео
