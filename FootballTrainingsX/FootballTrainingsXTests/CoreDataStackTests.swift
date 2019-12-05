@@ -12,15 +12,15 @@ import XCTest
 class CoreDataStackTests: XCTestCase {
     
     var coreDataStack: CoreDataStack!
-
+    
     override func setUp() {
         super.setUp()
         coreDataStack = CoreDataStack.shared
     }
-
+    
     override func tearDown() {
         coreDataStack = nil
-       super.tearDown()
+        super.tearDown()
     }
     
     func testThatCoreDataStackIsASingletone() {
@@ -33,6 +33,4 @@ class CoreDataStackTests: XCTestCase {
         // assert
         XCTAssertTrue(isEqual)
     }
-
-
 }

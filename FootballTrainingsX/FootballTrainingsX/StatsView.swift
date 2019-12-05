@@ -27,7 +27,7 @@ class StatsView: UIView {
     /// Обнуление статистики
     let resetButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setImage(UIImage(named: "delete")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.setImage(UIImage(named: "restore")?.withRenderingMode(.alwaysTemplate), for: .normal)
         return button
     }()
     
@@ -43,7 +43,7 @@ class StatsView: UIView {
         let offset: CGFloat = 25
         let titleLabelWidth = frame.width - offset
         let titleLabelHeight: CGFloat = titleLabel.text?.height(withConstrainedWidth: titleLabelWidth, font: titleLabel.font) ?? 70
-        let resetButtonHeight: CGFloat = 20
+        let resetButtonHeight: CGFloat = 30
         
         backgroundColor = .black
         

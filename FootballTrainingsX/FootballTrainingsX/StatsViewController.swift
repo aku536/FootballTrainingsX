@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Intents
+import CoreSpotlight
 
 class StatsViewController: UIViewController {
     // MARK: - Переменные
@@ -19,6 +21,11 @@ class StatsViewController: UIViewController {
     }
     
     // MARK: - ViewController lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        addUserActivity()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         exercisesList.removeAll()
@@ -65,6 +72,24 @@ class StatsViewController: UIViewController {
             exercisesList[index].successfulReps = 0
             stack.save(exercisesList[index])
         }
+    }
+    
+    // Добавление голосовой команды
+    private func addUserActivity() {
+        let activity = NSUserActivity(activityType: "com.krrl.FootballTrainingsX.showStats")
+        activity.title = "Показать результаты"
+        if #available(iOS 12.0, *) {
+            activity.suggestedInvocationPhrase = "Покажи результаты футбольных тренировок"
+            activity.isEligibleForPrediction = true
+            activity.isEligibleForSearch = true
+        }
+        let attributes =  CSSearchableItemAttributeSet(itemContentType:"NSUserActivity.searchableItemContentType")
+        if let image = UIImage(named: "x1240") {
+            attributes.thumbnailData = image.pngData()
+        }
+        attributes.contentDescription = "Открыть экран статистики"
+        activity.contentAttributeSet = attributes
+        userActivity = activity
     }
 }
 

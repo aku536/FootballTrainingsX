@@ -9,7 +9,8 @@
 import Foundation
 
 class PercentageCalculator {
-    ///
+    /// Принимает количество успешных подходов, общее количество в строковом формате
+    /// и возвращает процент выполнения в виде строки
     ///
     /// - Parameters:
     ///   - count: Количество успешно выполненных упражнений
@@ -22,8 +23,6 @@ class PercentageCalculator {
             total > 0 {
             return "\(Int(count/total*100))%"
         }
-        else {
-            return "0%"
-        }
+        return "0%"
     }
 }

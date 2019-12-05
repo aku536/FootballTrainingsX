@@ -15,5 +15,6 @@ struct Exercise {
     var numberOfReps: Int16 // Количество повторений
     var successfulReps: Int16 // Количество успешных повторений
     var urlString: String // Ссылка на видео
+    var localURLString: String? // Ссылка на сохранненное видео
     
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ExerciseViewController: UIViewController, AddStatsViewDelegate {
+class ExerciseViewController: UIViewController {
     // MARK: - Переменные
     var exercise: Exercise
     private let stack = CoreDataStack.shared
@@ -28,13 +28,17 @@ class ExerciseViewController: UIViewController, AddStatsViewDelegate {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification,
                                                object: nil,
-                                               queue: nil) { _ in
-                                                self.view.frame.origin = CGPoint(x: 0, y: -200)
+                                               queue: nil) { [weak self] _ in
+                                                self?.view.frame.origin = CGPoint(x: 0, y: -115)
         }
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification,
                                                object: nil,
-                                               queue: nil) { _ in
+                                               queue: nil) { [weak self] _ in
+                                                guard let self = self else {
+                                                    return
+                                                }
                                                 self.view.frame.origin = CGPoint(x: 0, y: 0)
+                                                self.stepperValueDidChanged((self.exerciseView.successfulRepsView.stepper))
         }
         
     }
@@ -62,16 +66,27 @@ class ExerciseViewController: UIViewController, AddStatsViewDelegate {
         
         exerciseView.titleLabel.attributedText = makeAttributedText(from: exercise.type)
         exerciseView.descriptionTextView.text = exercise.exerciseDescription
-        exerciseView.urlString = exercise.urlString
+        if let localURLString = exercise.localURLString {
+            exerciseView.urlString = localURLString
+            exerciseView.downloadVideoButton.setImage(UIImage(named: "delete"), for: .normal)
+        } else {
+            exerciseView.urlString = exercise.urlString
+            exerciseView.downloadVideoButton.setImage(UIImage(named: "download"), for: .normal)
+        }
         exerciseView.saveButton.addTarget(self, action: #selector(save), for: .touchUpInside)
-        exerciseView.successfulRepsView.delegate = self
-        exerciseView.repsView.delegate = self
+        exerciseView.repsView.stepper.addTarget(self, action: #selector(stepperValueDidChanged(_:)), for: .allTouchEvents)
+        exerciseView.repsView.textField.addTarget(self, action: #selector(textFieldDidChanged(_:)), for: .editingChanged)
+        exerciseView.successfulRepsView.stepper.addTarget(self, action: #selector(stepperValueDidChanged(_:)), for: .allTouchEvents)
+        exerciseView.successfulRepsView.textField.addTarget(self, action: #selector(textFieldDidChanged(_:)), for: .editingChanged)
         view.addSubview(exerciseView)
+        exerciseView.downloadVideoButton.addTarget(self, action: #selector(downloadVideo), for: .touchUpInside)
         exerciseView.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 1.0).isActive = true
         exerciseView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         exerciseView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         exerciseView.bottomAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.bottomAnchor, multiplier: 1.0).isActive = true
     }
+    
+    // MARK: - Приватные методы
     
     // Преобразуем текст для заголовка
     private func makeAttributedText(from text: String) -> NSAttributedString {
@@ -82,9 +97,7 @@ class ExerciseViewController: UIViewController, AddStatsViewDelegate {
         ]
         return NSAttributedString(string: text, attributes: attributes)
     }
-    
-    // MARK: - Приватные методы
-    
+      
     // Говорит делегату сохранить данные и убирает view с экрана
     @objc private func save() {
         if let repsString = exerciseView.repsView.textField.text, let numberOfReps = Int(repsString),
@@ -103,6 +116,68 @@ class ExerciseViewController: UIViewController, AddStatsViewDelegate {
         }
     }
     
+    // Меняет текст при изменении значения степпера
+    @objc private func stepperValueDidChanged(_ sender: UIStepper) {
+        if sender == exerciseView.repsView.stepper {
+            // Проверяем, что успешно выполненных упражнений меньше, чем всего
+            if sender.value < exerciseView.successfulRepsView.stepper.value {
+                exerciseView.successfulRepsView.stepper.value = sender.value
+                stepperValueDidChanged(exerciseView.successfulRepsView.stepper)
+            }
+            exerciseView.repsView.textField.text = "\(Int(sender.value))"
+        } else if sender == exerciseView.successfulRepsView.stepper {
+            // Проверяем, что успешно выполненных упражнений меньше, чем всего
+            if sender.value > exerciseView.repsView.stepper.value {
+                sender.value = exerciseView.repsView.stepper.value
+            }
+            exerciseView.successfulRepsView.textField.text = "\(Int(sender.value))"
+        }
+        updatePercantage()
+    }
+    
+    // Меняет значение степпера при изменении значения текста
+    @objc private func textFieldDidChanged(_ sender: UITextField) {
+        if sender == exerciseView.repsView.textField {
+            guard let text = sender.text, let textToDouble = Double(text) else {
+                exerciseView.repsView.stepper.value = 0.0
+                updatePercantage()
+                return
+            }
+            exerciseView.repsView.stepper.value = textToDouble
+        } else if sender == exerciseView.successfulRepsView.textField {
+            guard let text = sender.text, let textToDouble = Double(text) else {
+                exerciseView.successfulRepsView.stepper.value = 0.0
+                updatePercantage()
+                return
+            }
+            exerciseView.successfulRepsView.stepper.value = textToDouble
+        }
+        updatePercantage()
+    }
+    
+    // Загружаем видео в FileManager, либо удаляем его, если уже загружено
+    @objc private func downloadVideo() {
+        guard let videoURL = URL(string: exercise.urlString) else { return }
+        let networkWorker = NetworkWorker()
+        exerciseView.downloadVideoButton.isHidden = true
+        exerciseView.spinner.startAnimating()
+        networkWorker.downloadVideo(with: videoURL) { (localURLString) in
+            self.exercise.localURLString = localURLString
+            self.stack.save(self.exercise)
+            DispatchQueue.main.async {
+                self.exerciseView.spinner.stopAnimating()
+                let imageName = (localURLString != nil) ? "delete" : "download"
+                self.exerciseView.downloadVideoButton.setImage(UIImage(named: imageName), for: .normal)
+                self.exerciseView.downloadVideoButton.isHidden = false
+            }
+        }      
+    }
 }
 
-
+// MARK: - UITextFieldDelegate
+extension ExerciseViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}

@@ -32,6 +32,7 @@ class PlayerView: UIView {
         setupUI()
     }
     
+    // Убираем обозреватели и сам плеер
     deinit {
         if timeObserver != nil {
             player?.removeTimeObserver(timeObserver as Any)

@@ -8,15 +8,16 @@
 
 import UIKit
 
+// Представление, отображающее одно упражнение
 class ExerciseView: UIView {
     
     var urlString = "'"
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         setupUI()
     }
-
+    
     // MARK: - Создание элементов view
     
     /// Название упражнения
@@ -32,6 +33,22 @@ class ExerciseView: UIView {
         let playerView = UIView()
         playerView.translatesAutoresizingMaskIntoConstraints = false
         return playerView
+    }()
+    
+    /// Кнопка сохранения видео
+    let downloadVideoButton: UIButton = {
+        let button = UIButton(type: .roundedRect)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .clear
+        button.setTitle("Сохранить видео", for: .normal)
+        return button
+    }()
+    
+    /// Индикатор загрузки видео на устройство
+    let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .white)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        return spinner
     }()
     
     /// Описание упражнения
@@ -111,6 +128,16 @@ class ExerciseView: UIView {
         playerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: yOffset).isActive = true
         addPlayerView()
         
+        addSubview(downloadVideoButton)
+        downloadVideoButton.widthAnchor.constraint(equalToConstant: height/2).isActive = true
+        downloadVideoButton.heightAnchor.constraint(equalToConstant: height/2).isActive = true
+        downloadVideoButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -xOffset).isActive = true
+        downloadVideoButton.topAnchor.constraint(equalTo: playerView.bottomAnchor, constant: yOffset).isActive = true
+        
+        addSubview(spinner)
+        spinner.centerXAnchor.constraint(equalTo: downloadVideoButton.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: downloadVideoButton.centerYAnchor).isActive = true
+        
         addSubview(saveButton)
         saveButton.widthAnchor.constraint(equalToConstant: width).isActive = true
         saveButton.heightAnchor.constraint(equalToConstant: height).isActive = true
@@ -135,12 +162,12 @@ class ExerciseView: UIView {
         repsView.heightAnchor.constraint(equalToConstant: height).isActive = true
         repsView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         repsView.bottomAnchor.constraint(equalTo: successfulRepsView.topAnchor, constant: -5).isActive = true
-            
+        
         addSubview(descriptionTextView)
         descriptionTextView.widthAnchor.constraint(equalToConstant: width).isActive = true
         descriptionTextView.bottomAnchor.constraint(equalTo: repsView.topAnchor, constant: -yOffset).isActive = true
         descriptionTextView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        descriptionTextView.topAnchor.constraint(equalTo: playerView.bottomAnchor, constant: yOffset).isActive = true
+        descriptionTextView.topAnchor.constraint(equalTo: downloadVideoButton.bottomAnchor, constant: yOffset).isActive = true
     }
     
     private func addPlayerView() {

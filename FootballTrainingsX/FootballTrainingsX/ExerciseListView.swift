@@ -8,6 +8,7 @@
 
 import UIKit
 
+// Представление, отображающее список доступных упражнений
 class ExerciseListView: UIView {
     // MARK: - Настройка UI
     override func layoutSubviews() {

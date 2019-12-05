@@ -8,22 +8,19 @@
 
 import UIKit
 
-// TODO: - Вынести логику
-protocol AddStatsViewDelegate {
-    func updatePercantage()
-}
-
+// Вспомогательное представление, содержит элементы для изменения количества выполненных повторов
 class AddStatsView: UIView {
     
     var exerciseTitle = ""
-    var delegate: AddStatsViewDelegate?
     
+    // MARK: - Настройка UI
     override func layoutSubviews() {
         super.layoutSubviews()
         setupUI()
     }
     
-    private let stepper: UIStepper = {
+    /// Изменяет число в textField на 1
+    let stepper: UIStepper = {
         let stepper = UIStepper()
         
         stepper.minimumValue = 0
@@ -41,6 +38,7 @@ class AddStatsView: UIView {
         return label
     }()
 
+    /// Содержит количество повторов
     lazy var textField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -54,10 +52,7 @@ class AddStatsView: UIView {
         textField.leftView = title
         textField.leftViewMode = .always
         textField.rightView = stepper
-        stepper.addTarget(self, action: #selector(stepperValueDidChanged(_:)), for: .allTouchEvents)
         textField.rightViewMode = .always
-        
-        textField.addTarget(self, action: #selector(textFieldDidChanged(_:)), for: .editingChanged)
         return textField
     }()
     
@@ -69,30 +64,5 @@ class AddStatsView: UIView {
         textField.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         textField.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
-    
-    // Меняет текст при изменении значения степпера
-    @objc private func stepperValueDidChanged(_ sender: UIStepper) {
-        textField.text = "\(Int(sender.value))"
-        delegate?.updatePercantage()
-    }
-    
-    // Меняет значение степпера при изменении значения текста
-    @objc private func textFieldDidChanged(_ sender: UITextField) {
-        guard let text = sender.text, let textToDouble = Double(text) else {
-            stepper.value = 0.0
-            delegate?.updatePercantage()
-            return
-        }
-        stepper.value = textToDouble
-        delegate?.updatePercantage()
-    }
-    
 }
 
-// MARK: - UITextFieldDelegate
-extension AddStatsView: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-}

@@ -17,5 +17,6 @@ internal class MOExercise: NSManagedObject {
     @NSManaged var numberOfReps: Int16 // Количество повторений
     @NSManaged var successfulReps: Int16 // Количество успешных повторений
     @NSManaged var urlString: String // Ссылка на видео
+    @NSManaged var localURLString: String? // Ссылка на сохранненное видео
 
 }

@@ -45,7 +45,8 @@ final class CoreDataStack {
                 let numberOfReps = training.value(forKey: "numberOfReps") as? Int16 ?? 0
                 let successfulReps = training.value(forKey: "successfulReps") as? Int16 ?? 0
                 let urlString = training.value(forKey: "urlString") as? String ?? ""
-                let loadedTraining = Exercise(type: type, exerciseDescription: exerciseDescription, numberOfReps: numberOfReps, successfulReps: successfulReps, urlString: urlString)
+                let localURLString = training.value(forKey: "localURLString") as? String
+                let loadedTraining = Exercise(type: type, exerciseDescription: exerciseDescription, numberOfReps: numberOfReps, successfulReps: successfulReps, urlString: urlString, localURLString: localURLString)
                 loadedTrainings.append(loadedTraining)
             }
             return loadedTrainings
@@ -75,6 +76,7 @@ final class CoreDataStack {
                 if loadedTraining.type == training.type {
                     loadedTraining.numberOfReps = training.numberOfReps
                     loadedTraining.successfulReps = training.successfulReps
+                    loadedTraining.localURLString = training.localURLString
                     try? managedContext.save()
                 }
             }
