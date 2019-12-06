@@ -40,5 +40,5 @@ FootballTrainingsX
  4. Спрашиваем у Сири команду
  5. Открывается экран со статистикой
  
- ![](//https://firebasestorage.googleapis.com/v0/b/footballtrainingsx.appspot.com/o/Снимок%20экрана%202019-12-06%20в%2016.48.48.png?alt=media&token=8ca75652-8823-4199-ad13-12b35ed03c17)
- ![](//https://firebasestorage.googleapis.com/v0/b/footballtrainingsx.appspot.com/o/Снимок%20экрана%202019-12-06%20в%2016.49.00.png?alt=media&token=82836b50-6b34-48a2-875f-31668fb03a7a)
+ ![](https://firebasestorage.googleapis.com/v0/b/footballtrainingsx.appspot.com/o/Снимок%20экрана%202019-12-06%20в%2016.48.48.png?alt=media&token=8ca75652-8823-4199-ad13-12b35ed03c17)
+ ![](https://firebasestorage.googleapis.com/v0/b/footballtrainingsx.appspot.com/o/Снимок%20экрана%202019-12-06%20в%2016.49.00.png?alt=media&token=82836b50-6b34-48a2-875f-31668fb03a7a)
