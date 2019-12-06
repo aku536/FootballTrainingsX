@@ -27,4 +27,18 @@ FootballTrainingsX
         * Кнопка play/pause c Анимацией
 * CoreData загрузка и сохранение данных из памяти, обнуление накопленных данных
 * UserDefaults для определения первого запуска приложения на устройстве
+* FileManager для локального сохранения видео
 * Unit-тесты
+
+### Киллер-фича: 
+ Голосовая команда для Сири (Siri shortcut)
+ 
+ Как использовать (iOS 12):
+ 1. Запускаем приложение
+ 2. Заходим в "Настройки->Siri и поиск"
+ 3. Задаем голосовую команду
+ 4. Спрашиваем у Сири команду
+ 5. Открывается экран со статистикой
+ 
+ ![](//https://firebasestorage.googleapis.com/v0/b/footballtrainingsx.appspot.com/o/Снимок%20экрана%202019-12-06%20в%2016.48.48.png?alt=media&token=8ca75652-8823-4199-ad13-12b35ed03c17)
+ ![](//https://firebasestorage.googleapis.com/v0/b/footballtrainingsx.appspot.com/o/Снимок%20экрана%202019-12-06%20в%2016.49.00.png?alt=media&token=82836b50-6b34-48a2-875f-31668fb03a7a)
