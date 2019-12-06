@@ -9,6 +9,11 @@
 import Foundation
 
 class NetworkWorker {
+    /// Загружает видео по ссылке и сохраняет его на устройстве
+    ///
+    /// - Parameters:
+    ///   - url: ссылка на видео
+    ///   - completion: возвращает ссылку на локально сохраненное видео
     func downloadVideo(with url: URL, completion: @escaping (String?) -> Void) {
         guard let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         let localPath = documentsDirectoryURL.appendingPathComponent(url.lastPathComponent).path
