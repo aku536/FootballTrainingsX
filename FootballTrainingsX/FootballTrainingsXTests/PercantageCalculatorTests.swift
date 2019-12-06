@@ -10,25 +10,29 @@ import XCTest
 @testable import FootballTrainingsX
 
 class PercantageCalculatorTests: XCTestCase {
+    
+    var percentageCalculator: PercentageCalculator!
 
     override func setUp() {
         super.setUp()
+        percentageCalculator = PercentageCalculator()
     }
 
     override func tearDown() {
+        percentageCalculator = nil
         super.tearDown()
     }
 
-    func testThatCalculationsAreCorrect() {
+    func testThatCalculatorComputesPercantageCorrectly() {
         // arrange
         let count = "7"
         let total = "10"
         
         // act
-        let percantage = PercentageCalculator.calculatePercenatge(count: count, total: total)
+        let percentage = percentageCalculator.calculatePercenatge(count: count, total: total)
         
         // assert
-        XCTAssertEqual("70%", percantage, "Процент посчитан неправильно")
+        XCTAssertEqual("70%", percentage, "Процент посчитан неправильно")
     }
     
     func testThatPercantageCalculatorCanHandleIncorrectArguments() {
@@ -37,10 +41,10 @@ class PercantageCalculatorTests: XCTestCase {
         let total = "10"
         
         // act
-        let percantage = PercentageCalculator.calculatePercenatge(count: incorrectCount, total: total)
+        let percentage = percentageCalculator.calculatePercenatge(count: incorrectCount, total: total)
         
         // assert
-        XCTAssertEqual("0%", percantage, "Процент посчитан неправильно")
+        XCTAssertEqual("0%", percentage, "Процент посчитан неправильно")
     }
 
 }

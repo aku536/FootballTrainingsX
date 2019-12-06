@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PercentageCalculator {
+protocol PercentageCalculatorProtocol {
     /// Принимает количество успешных подходов, общее количество в строковом формате
     /// и возвращает процент выполнения в виде строки
     ///
@@ -16,7 +16,11 @@ class PercentageCalculator {
     ///   - count: Количество успешно выполненных упражнений
     ///   - total: Общее количество подходов
     /// - Returns: Процент успешности в виде строки
-    static func calculatePercenatge(count: String, total: String) -> String {
+    func calculatePercenatge(count: String, total: String) -> String
+}
+
+class PercentageCalculator: PercentageCalculatorProtocol {
+    func calculatePercenatge(count: String, total: String) -> String {
         if let count = Double(count),
             let total = Double(total),
             count > 0,

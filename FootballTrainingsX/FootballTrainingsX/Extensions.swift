@@ -48,8 +48,8 @@ extension UIImage {
     func scaledTo(size newSize: CGSize) -> UIImage {
         UIGraphicsBeginImageContext(newSize)
         self.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        guard let newImage = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
         UIGraphicsEndImageContext()
-        return newImage!
+        return newImage
     }
 }

@@ -10,14 +10,24 @@ import UIKit
 
 class ExerciseListViewController: UIViewController {
     // MARK: - Переменные
-    private var exercisesList = [Exercise]() // футбольные упражнения
+    private var exerciseModel: ExerciseModel // футбольные упражнения
     private let reuseID = "ExerciseCell"
-    private let stack = CoreDataStack.shared
+
+    /// Колбэк, который вызывается при тапе на ячейку
+    var onExerciseSelect: (() -> Void)?
+    
+    init(model: ExerciseModel) {
+        exerciseModel = model
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - ViewController lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        exercisesList = stack.loadFromMemory()
         setupUI()
     }
     
@@ -40,7 +50,7 @@ class ExerciseListViewController: UIViewController {
 // MARK: - UITableViewDataSource
 extension ExerciseListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return exercisesList.count
+        return exerciseModel.exercisesList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -48,7 +58,7 @@ extension ExerciseListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.backgroundColor = .darkGray
-        let exercise = exercisesList[indexPath.row]
+        let exercise = exerciseModel.exercisesList[indexPath.row]
         let type = exercise.type
         cell.textLabel?.text = type
         cell.textLabel?.textColor = .white
@@ -64,9 +74,8 @@ extension ExerciseListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ExerciseListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let exercise = exercisesList[indexPath.row]
-        let exerciseVC = ExerciseViewController(exercise: exercise)
-        navigationController?.pushViewController(exerciseVC, animated: true)
+        exerciseModel.presentedExerciseIndex = indexPath.row
+        onExerciseSelect?()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

@@ -12,12 +12,22 @@ import CoreSpotlight
 
 class StatsViewController: UIViewController {
     // MARK: - Переменные
-    private var exercisesList = [Exercise]() // футбольные упражнения
+    private var exercisesModel: ExerciseModel // футбольные упражнения
+    private var percentageCalculator: PercentageCalculatorProtocol
     private let reuseID = "StatsCell"
-    private let stack = CoreDataStack.shared
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    
+    init(exerciseModel: ExerciseModel, percentageCalculator: PercentageCalculatorProtocol) {
+        self.exercisesModel = exerciseModel
+        self.percentageCalculator = percentageCalculator
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - ViewController lifecycle
@@ -28,8 +38,6 @@ class StatsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        exercisesList.removeAll()
-        exercisesList = stack.loadFromMemory()
         setupUI()
         statsView.resetButton.addTarget(self, action: #selector(presentAlert), for: .touchUpInside)
     }
@@ -67,11 +75,7 @@ class StatsViewController: UIViewController {
     
     // Обнуление статистики
     private func resetStats() {
-        for index in exercisesList.indices {
-            exercisesList[index].numberOfReps = 0
-            exercisesList[index].successfulReps = 0
-            stack.save(exercisesList[index])
-        }
+        exercisesModel.resetStats()
     }
     
     // Добавление голосовой команды
@@ -96,7 +100,7 @@ class StatsViewController: UIViewController {
 // MARK: - UITableViewDataSource
 extension StatsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return exercisesList.count
+        return exercisesModel.exercisesList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -104,15 +108,15 @@ extension StatsViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.backgroundColor = .darkGray
-        let training = exercisesList[indexPath.row]
+        let training = exercisesModel.exercisesList[indexPath.row]
         let type = training.type
         let reps = training.numberOfReps
         let successfulReps = training.successfulReps
         cell.exerciseImageView.image = UIImage(named: type)
-        cell.exerciseLabel.text = type
+        cell.exerciseTitleLabel.text = type
         cell.repsLabel.text = "Всего: \(reps)"
         cell.successLabel.text = "Успешно: \(successfulReps)"
-        cell.percentageLabel.text = PercentageCalculator.calculatePercenatge(count: String(successfulReps), total: String(reps))
+        cell.percentageLabel.text = percentageCalculator.calculatePercenatge(count: String(successfulReps), total: String(reps))
         return cell
     }
 }

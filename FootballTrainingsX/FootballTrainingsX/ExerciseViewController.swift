@@ -10,12 +10,18 @@ import UIKit
 
 class ExerciseViewController: UIViewController {
     // MARK: - Переменные
+    var exerciseModel: ExerciseModel
+    var percentageCalculator: PercentageCalculatorProtocol
+    var networkWorker: NetworkWorker
     var exercise: Exercise
-    private let stack = CoreDataStack.shared
     
     // MARK: - Инициализация
-    init(exercise: Exercise) {
-        self.exercise = exercise
+    init(exerciseModel: ExerciseModel, calculator: PercentageCalculatorProtocol, networkWorker: NetworkWorker) {
+        self.exerciseModel = exerciseModel
+        self.networkWorker = networkWorker
+        percentageCalculator = calculator
+        let index = exerciseModel.presentedExerciseIndex ?? 0
+        exercise = exerciseModel.exercisesList[index]
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -52,6 +58,7 @@ class ExerciseViewController: UIViewController {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
         exerciseView.playerView.subviews.first?.removeFromSuperview()
+        exerciseView.removeFromSuperview()
     }
     
     // MARK: - Настройка UI
@@ -63,7 +70,6 @@ class ExerciseViewController: UIViewController {
     
     private func setupUI() {
         title = "Запишите свои результаты"
-        
         exerciseView.titleLabel.attributedText = makeAttributedText(from: exercise.type)
         exerciseView.descriptionTextView.text = exercise.exerciseDescription
         if let localURLString = exercise.localURLString {
@@ -93,7 +99,7 @@ class ExerciseViewController: UIViewController {
         let attributes: [NSAttributedString.Key : Any] = [
             .foregroundColor : UIColor.white,
             .underlineStyle : NSUnderlineStyle.single.rawValue,
-            .font : UIFont(name: "TimesNewRomanPS-BoldMT", size: 40)!
+            .font : UIFont(name: "TimesNewRomanPS-BoldMT", size: 35) as Any
         ]
         return NSAttributedString(string: text, attributes: attributes)
     }
@@ -104,7 +110,7 @@ class ExerciseViewController: UIViewController {
             let successString = exerciseView.successfulRepsView.textField.text, let successfulReps = Int(successString) {
             exercise.numberOfReps += Int16(numberOfReps)
             exercise.successfulReps += Int16(successfulReps)
-            stack.save(exercise)
+            exerciseModel.save(exercise)
         }
         navigationController?.popViewController(animated: true)
     }
@@ -112,7 +118,7 @@ class ExerciseViewController: UIViewController {
     /// При изменении введенных результатов тренировки, считаем процент успешных выполнений
     func updatePercantage() {
         if let success = exerciseView.successfulRepsView.textField.text, let reps = exerciseView.repsView.textField.text {
-            exerciseView.percantageLabel.text = PercentageCalculator.calculatePercenatge(count: success, total: reps)
+            exerciseView.percantageLabel.text = percentageCalculator.calculatePercenatge(count: success, total: reps)
         }
     }
     
@@ -158,12 +164,12 @@ class ExerciseViewController: UIViewController {
     // Загружаем видео в FileManager, либо удаляем его, если уже загружено
     @objc private func downloadVideo() {
         guard let videoURL = URL(string: exercise.urlString) else { return }
-        let networkWorker = NetworkWorker()
         exerciseView.downloadVideoButton.isHidden = true
         exerciseView.spinner.startAnimating()
-        networkWorker.downloadVideo(with: videoURL) { (localURLString) in
+        networkWorker.downloadVideo(with: videoURL) { /*[weak self]*/ (localURLString) in
+            //guard let self = self else { return }
             self.exercise.localURLString = localURLString
-            self.stack.save(self.exercise)
+            self.exerciseModel.save(self.exercise)
             DispatchQueue.main.async {
                 self.exerciseView.spinner.stopAnimating()
                 let imageName = (localURLString != nil) ? "delete" : "download"

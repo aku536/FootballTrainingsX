@@ -58,8 +58,11 @@ final class CoreDataStack {
     
     /// Очистка сохраненных изображений
     func clearData() {
-        // TODO: - Обработка ошибки
-        try! persistentContainer.viewContext.execute(NSBatchDeleteRequest(fetchRequest: NSFetchRequest(entityName: "Exercise")))
+        do {
+            try persistentContainer.viewContext.execute(NSBatchDeleteRequest(fetchRequest: NSFetchRequest(entityName: "Exercise")))
+        } catch {
+            print("Не удалось очистить память")
+        }
     }
     
     /// Сохранение тренировок в память

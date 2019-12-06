@@ -13,7 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     var tabBarController: UITabBarController?
-    let  statsVC = StatsViewController()
+    var statsVC: StatsViewController?
+    var coordinator: ExerciseCoordinator?
+    
     let tabBarImageSize = CGSize(width: 30, height: 30)
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -33,13 +35,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // Настройка контроллеров
     private func setupControllers() {
-        let trainingsListVC = ExerciseListViewController()
+        let stack = CoreDataStack.shared
+        let model = ExerciseModel(stack: stack)
+        let percentageCalculator = PercentageCalculator()
+        let networkWorker = NetworkWorker()
         
-        let navigationController = UINavigationController(rootViewController: trainingsListVC)
+        let exerciseListVC = ExerciseListViewController(model: model)
+        
+        let navigationController = UINavigationController(rootViewController: exerciseListVC)
         navigationController.navigationBar.barStyle = .black
         let listImage = UIImage(named: "list")?.scaledTo(size: tabBarImageSize)
         navigationController.tabBarItem = UITabBarItem(title: nil, image: listImage, tag: 0)
+        
+        coordinator = ExerciseCoordinator(navigationController: navigationController, exerciseListVC: exerciseListVC, exerciseModel: model, networkWorker: networkWorker)
     
+        statsVC = StatsViewController(exerciseModel: model, percentageCalculator: percentageCalculator)
+        guard let statsVC = statsVC else { return }
         let statsImage = UIImage(named: "stats")?.scaledTo(size: tabBarImageSize)
         statsVC.tabBarItem = UITabBarItem(title: nil, image: statsImage, tag: 1)
     

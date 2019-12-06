@@ -48,6 +48,10 @@
 		02C96B06239A55000060D937 /* PercantageCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B05239A55000060D937 /* PercantageCalculatorTests.swift */; };
 		02C96B08239A66030060D937 /* NetworkWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B07239A66030060D937 /* NetworkWorker.swift */; };
 		02C96B09239A66BE0060D937 /* NetworkWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B07239A66030060D937 /* NetworkWorker.swift */; };
+		02C96B0D239E869E0060D937 /* ExerciseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B0C239E869E0060D937 /* ExerciseModel.swift */; };
+		02C96B0E239E869E0060D937 /* ExerciseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B0C239E869E0060D937 /* ExerciseModel.swift */; };
+		02C96B13239E91470060D937 /* ExerciseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B12239E91470060D937 /* ExerciseCoordinator.swift */; };
+		02C96B14239E91470060D937 /* ExerciseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B12239E91470060D937 /* ExerciseCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +92,8 @@
 		02C3FEE12396915800B5EB05 /* PercentageCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentageCalculator.swift; sourceTree = "<group>"; };
 		02C96B05239A55000060D937 /* PercantageCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercantageCalculatorTests.swift; sourceTree = "<group>"; };
 		02C96B07239A66030060D937 /* NetworkWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkWorker.swift; sourceTree = "<group>"; };
+		02C96B0C239E869E0060D937 /* ExerciseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseModel.swift; sourceTree = "<group>"; };
+		02C96B12239E91470060D937 /* ExerciseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +153,7 @@
 				024BDBBA238BD6920087174D /* ExerciseListViewController.swift */,
 				024BDBFC238E661E0087174D /* ExerciseViewController.swift */,
 				02C3FECF2395536A00B5EB05 /* StatsViewController.swift */,
+				02C96B12239E91470060D937 /* ExerciseCoordinator.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -166,6 +173,7 @@
 		024BDBFB238E65D10087174D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				02C96B0C239E869E0060D937 /* ExerciseModel.swift */,
 				02C3FED623963FCB00B5EB05 /* Exercise.swift */,
 				024BDBED238D379F0087174D /* MOExercise.swift */,
 				024BDBEF238D38230087174D /* TrainingModel.xcdatamodeld */,
@@ -301,10 +309,12 @@
 				024BDBBB238BD6920087174D /* ExerciseListViewController.swift in Sources */,
 				02C3FED723963FCB00B5EB05 /* Exercise.swift in Sources */,
 				0249E41B2398101200576C7D /* ExerciseView.swift in Sources */,
+				02C96B13239E91470060D937 /* ExerciseCoordinator.swift in Sources */,
 				02C3FED02395536A00B5EB05 /* StatsViewController.swift in Sources */,
 				02C3FECA239501DC00B5EB05 /* AddStatsView.swift in Sources */,
 				024BDC19239160D00087174D /* TimeFormatter.swift in Sources */,
 				02C3FEDF239664DD00B5EB05 /* StatsTableViewCell.swift in Sources */,
+				02C96B0D239E869E0060D937 /* ExerciseModel.swift in Sources */,
 				024BDBFD238E661E0087174D /* ExerciseViewController.swift in Sources */,
 				024BDBA9238BCFC50087174D /* AppDelegate.swift in Sources */,
 				024BDC16239156600087174D /* PlayerView.swift in Sources */,
@@ -322,6 +332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02C96B14239E91470060D937 /* ExerciseCoordinator.swift in Sources */,
 				0249E41C2398101200576C7D /* ExerciseView.swift in Sources */,
 				024BDC21239163F90087174D /* CoreDataStack.swift in Sources */,
 				02C3FECB2395086A00B5EB05 /* AddStatsView.swift in Sources */,
@@ -343,6 +354,7 @@
 				02C3FEE32396915900B5EB05 /* PercentageCalculator.swift in Sources */,
 				024BDC20239163F90087174D /* MOExercise.swift in Sources */,
 				024BDC2A23916D570087174D /* CoreDataStackTests.swift in Sources */,
+				02C96B0E239E869E0060D937 /* ExerciseModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

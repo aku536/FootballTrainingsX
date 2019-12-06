@@ -11,7 +11,7 @@ import UIKit
 // Представление, отображающее одно упражнение
 class ExerciseView: UIView {
     
-    var urlString = "'"
+    var urlString = ""
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -76,7 +76,7 @@ class ExerciseView: UIView {
     let successfulRepsView: AddStatsView = {
         let view = AddStatsView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.exerciseTitle = "Успешные повторы"
+        view.exerciseTitle = "Успешно"
         return view
     }()
     
@@ -110,29 +110,31 @@ class ExerciseView: UIView {
     private func setupUI() {
         backgroundColor = .black
         
-        let yOffset: CGFloat = 15
-        let xOffset: CGFloat = 25
+        let yOffset: CGFloat = 10
+        let xOffset: CGFloat = 15
         let width = frame.width - 2 * xOffset
-        let height: CGFloat = 40
-        
-        addSubview(titleLabel)
-        titleLabel.widthAnchor.constraint(equalToConstant: width).isActive = true
-        titleLabel.heightAnchor.constraint(equalToConstant: height).isActive = true
-        titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: yOffset).isActive = true
-        
-        addSubview(playerView)
-        playerView.widthAnchor.constraint(equalToConstant: frame.width).isActive = true
-        playerView.heightAnchor.constraint(equalToConstant: frame.width*9/16).isActive = true
-        playerView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        playerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: yOffset).isActive = true
-        addPlayerView()
+        let height: CGFloat = 30
+        let videoFormat: CGFloat = 9/16
+        let titleLabelHeight = titleLabel.text?.height(withConstrainedWidth: width, font: titleLabel.font) ?? height
         
         addSubview(downloadVideoButton)
         downloadVideoButton.widthAnchor.constraint(equalToConstant: height/2).isActive = true
         downloadVideoButton.heightAnchor.constraint(equalToConstant: height/2).isActive = true
         downloadVideoButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -xOffset).isActive = true
-        downloadVideoButton.topAnchor.constraint(equalTo: playerView.bottomAnchor, constant: yOffset).isActive = true
+        downloadVideoButton.topAnchor.constraint(equalTo: topAnchor, constant: height/2).isActive = true
+        
+        addSubview(titleLabel)
+        titleLabel.rightAnchor.constraint(equalTo: downloadVideoButton.leftAnchor).isActive = true
+        titleLabel.heightAnchor.constraint(equalToConstant: titleLabelHeight).isActive = true
+        titleLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: yOffset).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        
+        addSubview(playerView)
+        playerView.widthAnchor.constraint(equalToConstant: frame.width).isActive = true
+        playerView.heightAnchor.constraint(equalToConstant: frame.width * videoFormat).isActive = true
+        playerView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        playerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
+        addPlayerView()
         
         addSubview(spinner)
         spinner.centerXAnchor.constraint(equalTo: downloadVideoButton.centerXAnchor).isActive = true
@@ -167,7 +169,7 @@ class ExerciseView: UIView {
         descriptionTextView.widthAnchor.constraint(equalToConstant: width).isActive = true
         descriptionTextView.bottomAnchor.constraint(equalTo: repsView.topAnchor, constant: -yOffset).isActive = true
         descriptionTextView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        descriptionTextView.topAnchor.constraint(equalTo: downloadVideoButton.bottomAnchor, constant: yOffset).isActive = true
+        descriptionTextView.topAnchor.constraint(equalTo: playerView.bottomAnchor, constant: yOffset).isActive = true
     }
     
     private func addPlayerView() {
