@@ -53,7 +53,7 @@ class StatsView: UIView {
         resetButton.frame = CGRect(x: titleLabel.frame.maxX, y: titleLabel.frame.minY + 15, width: resetButtonHeight, height: resetButtonHeight)
         addSubview(resetButton)
         
-        tableView.frame = CGRect(x: 0, y: titleLabel.frame.maxY + offset, width: frame.width , height: frame.height - titleLabel.frame.height)
+        tableView.frame = CGRect(x: 0, y: titleLabel.frame.maxY + offset, width: frame.width , height: frame.height - titleLabel.frame.height - 3 * offset)
         addSubview(tableView)
     }
 }

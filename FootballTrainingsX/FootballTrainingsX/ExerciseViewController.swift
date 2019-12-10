@@ -12,13 +12,11 @@ class ExerciseViewController: UIViewController {
     // MARK: - Переменные
     var exerciseModel: ExerciseModel
     var percentageCalculator: PercentageCalculatorProtocol
-    var networkWorker: NetworkWorker
     var exercise: Exercise
     
     // MARK: - Инициализация
-    init(exerciseModel: ExerciseModel, calculator: PercentageCalculatorProtocol, networkWorker: NetworkWorker) {
+    init(exerciseModel: ExerciseModel, calculator: PercentageCalculatorProtocol) {
         self.exerciseModel = exerciseModel
-        self.networkWorker = networkWorker
         percentageCalculator = calculator
         let index = exerciseModel.presentedExerciseIndex ?? 0
         exercise = exerciseModel.exercisesList[index]
@@ -35,7 +33,7 @@ class ExerciseViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification,
                                                object: nil,
                                                queue: nil) { [weak self] _ in
-                                                self?.view.frame.origin = CGPoint(x: 0, y: -115)
+                                                self?.view.frame.origin = CGPoint(x: 0, y: -225)
         }
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification,
                                                object: nil,
@@ -166,8 +164,7 @@ class ExerciseViewController: UIViewController {
         guard let videoURL = URL(string: exercise.urlString) else { return }
         exerciseView.downloadVideoButton.isHidden = true
         exerciseView.spinner.startAnimating()
-        networkWorker.downloadVideo(with: videoURL) { /*[weak self]*/ (localURLString) in
-            //guard let self = self else { return }
+        exerciseModel.saveToFileManager(with: videoURL) { (localURLString) in
             self.exercise.localURLString = localURLString
             self.exerciseModel.save(self.exercise)
             DispatchQueue.main.async {

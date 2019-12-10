@@ -14,20 +14,18 @@ class ExerciseCoordinator {
     var navigationController: UINavigationController
     var exerciseListVC: ExerciseListViewController
     var exerciseModel: ExerciseModel
-    var networkWorker: NetworkWorker
     
-    init(navigationController: UINavigationController, exerciseListVC: ExerciseListViewController, exerciseModel: ExerciseModel, networkWorker: NetworkWorker) {
+    init(navigationController: UINavigationController, exerciseListVC: ExerciseListViewController, exerciseModel: ExerciseModel) {
         self.navigationController = navigationController
         self.exerciseListVC = exerciseListVC
         self.exerciseModel = exerciseModel
-        self.networkWorker = networkWorker
         exerciseListVC.onExerciseSelect = { [weak self] in
             self?.presentExerciseViewController()
         }
     }
     
     private func presentExerciseViewController() {
-        let exerciseVC = ExerciseViewController(exerciseModel: exerciseModel, calculator: PercentageCalculator(), networkWorker: networkWorker)
+        let exerciseVC = ExerciseViewController(exerciseModel: exerciseModel, calculator: PercentageCalculator())
         navigationController.pushViewController(exerciseVC, animated: true)
     }
     

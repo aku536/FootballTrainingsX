@@ -52,6 +52,11 @@
 		02C96B0E239E869E0060D937 /* ExerciseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B0C239E869E0060D937 /* ExerciseModel.swift */; };
 		02C96B13239E91470060D937 /* ExerciseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B12239E91470060D937 /* ExerciseCoordinator.swift */; };
 		02C96B14239E91470060D937 /* ExerciseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B12239E91470060D937 /* ExerciseCoordinator.swift */; };
+		02C96B16239F86830060D937 /* ExerciseModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B15239F86830060D937 /* ExerciseModelTests.swift */; };
+		02C96B1B239F91350060D937 /* CoreDataStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B1A239F91350060D937 /* CoreDataStub.swift */; };
+		02C96B1F239FA06B0060D937 /* NetworkWorkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B1E239FA06B0060D937 /* NetworkWorkerTests.swift */; };
+		02C96B21239FADE70060D937 /* NetworkWorkerFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B20239FADE70060D937 /* NetworkWorkerFake.swift */; };
+		02C96B25239FCA670060D937 /* FileManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C96B24239FCA670060D937 /* FileManagerStub.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +99,11 @@
 		02C96B07239A66030060D937 /* NetworkWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkWorker.swift; sourceTree = "<group>"; };
 		02C96B0C239E869E0060D937 /* ExerciseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseModel.swift; sourceTree = "<group>"; };
 		02C96B12239E91470060D937 /* ExerciseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCoordinator.swift; sourceTree = "<group>"; };
+		02C96B15239F86830060D937 /* ExerciseModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseModelTests.swift; sourceTree = "<group>"; };
+		02C96B1A239F91350060D937 /* CoreDataStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStub.swift; sourceTree = "<group>"; };
+		02C96B1E239FA06B0060D937 /* NetworkWorkerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkWorkerTests.swift; sourceTree = "<group>"; };
+		02C96B20239FADE70060D937 /* NetworkWorkerFake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkWorkerFake.swift; sourceTree = "<group>"; };
+		02C96B24239FCA670060D937 /* FileManagerStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerStub.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,9 +194,12 @@
 		024BDC0A238FC01B0087174D /* FootballTrainingsXTests */ = {
 			isa = PBXGroup;
 			children = (
-				024BDC1A239163DA0087174D /* TimeFormatterTests.swift */,
 				024BDC2923916D570087174D /* CoreDataStackTests.swift */,
+				02C96B15239F86830060D937 /* ExerciseModelTests.swift */,
+				02C96B1E239FA06B0060D937 /* NetworkWorkerTests.swift */,
+				024BDC1A239163DA0087174D /* TimeFormatterTests.swift */,
 				02C96B05239A55000060D937 /* PercantageCalculatorTests.swift */,
+				02C96B17239F86D40060D937 /* TestDoubles */,
 				024BDC0D238FC01B0087174D /* Info.plist */,
 			);
 			path = FootballTrainingsXTests;
@@ -203,6 +216,16 @@
 				0249E4142397A19B00576C7D /* StatsView.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		02C96B17239F86D40060D937 /* TestDoubles */ = {
+			isa = PBXGroup;
+			children = (
+				02C96B1A239F91350060D937 /* CoreDataStub.swift */,
+				02C96B24239FCA670060D937 /* FileManagerStub.swift */,
+				02C96B20239FADE70060D937 /* NetworkWorkerFake.swift */,
+			);
+			name = TestDoubles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -334,17 +357,22 @@
 			files = (
 				02C96B14239E91470060D937 /* ExerciseCoordinator.swift in Sources */,
 				0249E41C2398101200576C7D /* ExerciseView.swift in Sources */,
+				02C96B25239FCA670060D937 /* FileManagerStub.swift in Sources */,
 				024BDC21239163F90087174D /* CoreDataStack.swift in Sources */,
 				02C3FECB2395086A00B5EB05 /* AddStatsView.swift in Sources */,
 				024BDC2823916CAB0087174D /* TrainingModel.xcdatamodeld in Sources */,
 				02C3FED12395564A00B5EB05 /* StatsViewController.swift in Sources */,
 				0249E41923980EA600576C7D /* ExerciseListView.swift in Sources */,
+				02C96B16239F86830060D937 /* ExerciseModelTests.swift in Sources */,
 				024BDC23239163F90087174D /* TimeFormatter.swift in Sources */,
 				02C3FEE0239664DD00B5EB05 /* StatsTableViewCell.swift in Sources */,
 				024BDC1F239163F90087174D /* ExerciseViewController.swift in Sources */,
 				024BDC1D239163F90087174D /* PlayerView.swift in Sources */,
+				02C96B1F239FA06B0060D937 /* NetworkWorkerTests.swift in Sources */,
 				02C3FED82396404900B5EB05 /* Exercise.swift in Sources */,
+				02C96B21239FADE70060D937 /* NetworkWorkerFake.swift in Sources */,
 				02C96B09239A66BE0060D937 /* NetworkWorker.swift in Sources */,
+				02C96B1B239F91350060D937 /* CoreDataStub.swift in Sources */,
 				024BDC22239163F90087174D /* Extensions.swift in Sources */,
 				024BDC1C239163F90087174D /* AppDelegate.swift in Sources */,
 				02C96B06239A55000060D937 /* PercantageCalculatorTests.swift in Sources */,

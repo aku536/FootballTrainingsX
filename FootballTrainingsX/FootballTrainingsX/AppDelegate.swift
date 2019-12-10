@@ -36,9 +36,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Настройка контроллеров
     private func setupControllers() {
         let stack = CoreDataStack.shared
-        let model = ExerciseModel(stack: stack)
-        let percentageCalculator = PercentageCalculator()
         let networkWorker = NetworkWorker()
+        let model = ExerciseModel(stack: stack, networkWorker: networkWorker, fileManager: FileManager.default)
+        let percentageCalculator = PercentageCalculator()
         
         let exerciseListVC = ExerciseListViewController(model: model)
         
@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let listImage = UIImage(named: "list")?.scaledTo(size: tabBarImageSize)
         navigationController.tabBarItem = UITabBarItem(title: nil, image: listImage, tag: 0)
         
-        coordinator = ExerciseCoordinator(navigationController: navigationController, exerciseListVC: exerciseListVC, exerciseModel: model, networkWorker: networkWorker)
+        coordinator = ExerciseCoordinator(navigationController: navigationController, exerciseListVC: exerciseListVC, exerciseModel: model)
     
         statsVC = StatsViewController(exerciseModel: model, percentageCalculator: percentageCalculator)
         guard let statsVC = statsVC else { return }

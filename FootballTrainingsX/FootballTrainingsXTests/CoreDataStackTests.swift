@@ -15,7 +15,7 @@ class CoreDataStackTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        coreDataStack = CoreDataStack.shared
+        coreDataStack = (CoreDataStack.shared as! CoreDataStack)
     }
     
     override func tearDown() {
@@ -25,7 +25,7 @@ class CoreDataStackTests: XCTestCase {
     
     func testThatCoreDataStackIsASingletone() {
         // arrange
-        let coreDataStack2 = CoreDataStack.shared
+        let coreDataStack2 = (CoreDataStack.shared as! CoreDataStack)
         
         // act
         let isEqual = coreDataStack === coreDataStack2
