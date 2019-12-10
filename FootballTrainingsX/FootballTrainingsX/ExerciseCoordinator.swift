@@ -8,27 +8,32 @@
 
 import UIKit
 
-/// Создает и экран упражнения, когда оно выбрано
+/// Работа с отображением списка упражнений и подробного представления
 class ExerciseCoordinator {
     
-    var navigationController: UINavigationController
-    var exerciseListVC: ExerciseListViewController
-    var exerciseModel: ExerciseModel
-    var networkWorker: NetworkWorker
+    var navigationController: UINavigationController?
+    var exerciseListVC: ExerciseSelectionProtocol
+    var exerciseVC: UIViewController
     
-    init(navigationController: UINavigationController, exerciseListVC: ExerciseListViewController, exerciseModel: ExerciseModel, networkWorker: NetworkWorker) {
-        self.navigationController = navigationController
+    init(exerciseListVC: ExerciseSelectionProtocol, exerciseVC: UIViewController) {
         self.exerciseListVC = exerciseListVC
-        self.exerciseModel = exerciseModel
-        self.networkWorker = networkWorker
+        self.exerciseVC = exerciseVC
+    }
+    
+    /// Устанавливает колбэк и презентует представление со списком упражнений
+    func start() {
         exerciseListVC.onExerciseSelect = { [weak self] in
             self?.presentExerciseViewController()
         }
+        guard let exerciseListVC = exerciseListVC as? UIViewController else { return }
+        navigationController?.pushViewController(exerciseListVC, animated: true)
     }
     
+    /// Отображает ExerciseViewController, когда вызывается колбэк у ExerciseListViewController
     private func presentExerciseViewController() {
-        let exerciseVC = ExerciseViewController(exerciseModel: exerciseModel, calculator: PercentageCalculator(), networkWorker: networkWorker)
-        navigationController.pushViewController(exerciseVC, animated: true)
+        navigationController?.pushViewController(exerciseVC, animated: true)
     }
     
 }
+
+

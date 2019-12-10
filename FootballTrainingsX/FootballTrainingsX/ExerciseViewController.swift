@@ -12,13 +12,11 @@ class ExerciseViewController: UIViewController {
     // MARK: - Переменные
     var exerciseModel: ExerciseModel
     var percentageCalculator: PercentageCalculatorProtocol
-    var networkWorker: NetworkWorker
     var exercise: Exercise
     
     // MARK: - Инициализация
-    init(exerciseModel: ExerciseModel, calculator: PercentageCalculatorProtocol, networkWorker: NetworkWorker) {
+    init(exerciseModel: ExerciseModel, calculator: PercentageCalculatorProtocol) {
         self.exerciseModel = exerciseModel
-        self.networkWorker = networkWorker
         percentageCalculator = calculator
         let index = exerciseModel.presentedExerciseIndex ?? 0
         exercise = exerciseModel.exercisesList[index]
@@ -30,28 +28,12 @@ class ExerciseViewController: UIViewController {
     }
     
     // MARK: - ViewController lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification,
-                                               object: nil,
-                                               queue: nil) { [weak self] _ in
-                                                self?.view.frame.origin = CGPoint(x: 0, y: -115)
-        }
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification,
-                                               object: nil,
-                                               queue: nil) { [weak self] _ in
-                                                guard let self = self else {
-                                                    return
-                                                }
-                                                self.view.frame.origin = CGPoint(x: 0, y: 0)
-                                                self.stepperValueDidChanged((self.exerciseView.successfulRepsView.stepper))
-        }
-        
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let index = exerciseModel.presentedExerciseIndex ?? 0
+        exercise = exerciseModel.exercisesList[index]
         setupUI()
+        setupObservers()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -69,6 +51,7 @@ class ExerciseViewController: UIViewController {
     }()
     
     private func setupUI() {
+        view.backgroundColor = .black
         title = "Запишите свои результаты"
         exerciseView.titleLabel.attributedText = makeAttributedText(from: exercise.type)
         exerciseView.descriptionTextView.text = exercise.exerciseDescription
@@ -90,6 +73,25 @@ class ExerciseViewController: UIViewController {
         exerciseView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         exerciseView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         exerciseView.bottomAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.bottomAnchor, multiplier: 1.0).isActive = true
+    }
+    
+    private func setupObservers() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification,
+                                               object: nil,
+                                               queue: nil) { [weak self] _ in
+                                                self?.view.frame.origin = CGPoint(x: 0, y: -185)
+                                                self?.exerciseView.saveButton.isEnabled = false
+        }
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification,
+                                               object: nil,
+                                               queue: nil) { [weak self] _ in
+                                                guard let self = self else {
+                                                    return
+                                                }
+                                                self.view.frame.origin = CGPoint(x: 0, y: 0)
+                                                self.stepperValueDidChanged((self.exerciseView.successfulRepsView.stepper))
+                                                self.exerciseView.saveButton.isEnabled = true
+        }
     }
     
     // MARK: - Приватные методы
@@ -116,7 +118,7 @@ class ExerciseViewController: UIViewController {
     }
     
     /// При изменении введенных результатов тренировки, считаем процент успешных выполнений
-    func updatePercantage() {
+    private func updatePercantage() {
         if let success = exerciseView.successfulRepsView.textField.text, let reps = exerciseView.repsView.textField.text {
             exerciseView.percantageLabel.text = percentageCalculator.calculatePercenatge(count: success, total: reps)
         }
@@ -166,8 +168,7 @@ class ExerciseViewController: UIViewController {
         guard let videoURL = URL(string: exercise.urlString) else { return }
         exerciseView.downloadVideoButton.isHidden = true
         exerciseView.spinner.startAnimating()
-        networkWorker.downloadVideo(with: videoURL) { /*[weak self]*/ (localURLString) in
-            //guard let self = self else { return }
+        exerciseModel.saveToFileManager(with: videoURL) { (localURLString) in
             self.exercise.localURLString = localURLString
             self.exerciseModel.save(self.exercise)
             DispatchQueue.main.async {

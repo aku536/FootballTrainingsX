@@ -8,7 +8,11 @@
 
 import UIKit
 
-class ExerciseListViewController: UIViewController {
+protocol ExerciseSelectionProtocol {
+    var onExerciseSelect: (() -> Void)? { get set }
+}
+
+class ExerciseListViewController: UIViewController, ExerciseSelectionProtocol {
     // MARK: - Переменные
     private var exerciseModel: ExerciseModel // футбольные упражнения
     private let reuseID = "ExerciseCell"
@@ -32,7 +36,7 @@ class ExerciseListViewController: UIViewController {
     }
     
     // MARK: - Настройка UI
-    private let exerciseListView = ExerciseListView()
+    private lazy var exerciseListView = ExerciseListView()
     
     private func setupUI() {
         navigationController?.navigationBar.topItem?.title = "Выберите упражнение"

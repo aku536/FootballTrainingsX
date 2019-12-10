@@ -118,8 +118,8 @@ class ExerciseView: UIView {
         let titleLabelHeight = titleLabel.text?.height(withConstrainedWidth: width, font: titleLabel.font) ?? height
         
         addSubview(downloadVideoButton)
-        downloadVideoButton.widthAnchor.constraint(equalToConstant: height/2).isActive = true
-        downloadVideoButton.heightAnchor.constraint(equalToConstant: height/2).isActive = true
+        downloadVideoButton.widthAnchor.constraint(equalToConstant: height/1.5).isActive = true
+        downloadVideoButton.heightAnchor.constraint(equalToConstant: height/1.5).isActive = true
         downloadVideoButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -xOffset).isActive = true
         downloadVideoButton.topAnchor.constraint(equalTo: topAnchor, constant: height/2).isActive = true
         
@@ -151,6 +151,7 @@ class ExerciseView: UIView {
         percantageLabel.heightAnchor.constraint(equalToConstant: height).isActive = true
         percantageLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         percantageLabel.bottomAnchor.constraint(equalTo: saveButton.topAnchor, constant: -yOffset).isActive = true
+        percantageLabel.text = "0%"
         
         addSubview(successfulRepsView)
         successfulRepsView.widthAnchor.constraint(equalToConstant: width).isActive = true

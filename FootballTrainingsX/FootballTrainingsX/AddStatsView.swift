@@ -59,6 +59,8 @@ class AddStatsView: UIView {
     private func setupUI() {
         backgroundColor = .black
         addSubview(textField)
+        textField.text = "0"
+        stepper.value = 0.0
         textField.topAnchor.constraint(equalTo: topAnchor).isActive = true
         textField.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         textField.rightAnchor.constraint(equalTo: rightAnchor).isActive = true

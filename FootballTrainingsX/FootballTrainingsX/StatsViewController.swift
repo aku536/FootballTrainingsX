@@ -20,6 +20,7 @@ class StatsViewController: UIViewController {
         return .lightContent
     }
     
+    // MARK: - Инициализация
     init(exerciseModel: ExerciseModel, percentageCalculator: PercentageCalculatorProtocol) {
         self.exercisesModel = exerciseModel
         self.percentageCalculator = percentageCalculator
@@ -43,7 +44,7 @@ class StatsViewController: UIViewController {
     }
     
     // MARK: - Настройка UI
-    private let statsView = StatsView()
+    private lazy var statsView = StatsView()
     
     private func setupUI() {
         statsView.frame = view.frame

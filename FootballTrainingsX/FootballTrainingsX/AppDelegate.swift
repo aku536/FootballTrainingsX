@@ -12,14 +12,11 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var tabBarController: UITabBarController?
-    var statsVC: StatsViewController?
-    var coordinator: ExerciseCoordinator?
-    
-    let tabBarImageSize = CGSize(width: 30, height: 30)
+    var tabBarCoordinator: TabBarCoordinator?
+    var exerciseCoordinator: ExerciseCoordinator?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        CoreDataStack.shared.firstLaunchSettings()
+        CoreDataStack.shared.firstLaunchSettings(userDefaults: UserDefaults.standard)
         setupControllers()
         return true
     }
@@ -36,36 +33,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Настройка контроллеров
     private func setupControllers() {
         let stack = CoreDataStack.shared
-        let model = ExerciseModel(stack: stack)
-        let percentageCalculator = PercentageCalculator()
         let networkWorker = NetworkWorker()
+        let model = ExerciseModel(stack: stack, networkWorker: networkWorker, fileManager: FileManager.default)
+        let percentageCalculator = PercentageCalculator()
+        
+        let tabBarController = UITabBarController()
+        tabBarController.tabBar.barStyle = .black
         
         let exerciseListVC = ExerciseListViewController(model: model)
-        
-        let navigationController = UINavigationController(rootViewController: exerciseListVC)
-        navigationController.navigationBar.barStyle = .black
-        let listImage = UIImage(named: "list")?.scaledTo(size: tabBarImageSize)
-        navigationController.tabBarItem = UITabBarItem(title: nil, image: listImage, tag: 0)
-        
-        coordinator = ExerciseCoordinator(navigationController: navigationController, exerciseListVC: exerciseListVC, exerciseModel: model, networkWorker: networkWorker)
-    
-        statsVC = StatsViewController(exerciseModel: model, percentageCalculator: percentageCalculator)
-        guard let statsVC = statsVC else { return }
-        let statsImage = UIImage(named: "stats")?.scaledTo(size: tabBarImageSize)
-        statsVC.tabBarItem = UITabBarItem(title: nil, image: statsImage, tag: 1)
-    
-        tabBarController = UITabBarController()
-        tabBarController?.tabBar.barStyle = .black
-        tabBarController?.viewControllers = [navigationController, statsVC]
+        let exerciseVC = ExerciseViewController(exerciseModel: model, calculator: percentageCalculator)
+        let statsVC = StatsViewController(exerciseModel: model, percentageCalculator: percentageCalculator)
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
+        
+        tabBarCoordinator = TabBarCoordinator(tabBarVC: tabBarController, viewController: statsVC)
+        tabBarCoordinator?.setup()
+        
+        exerciseCoordinator = ExerciseCoordinator(exerciseListVC: exerciseListVC, exerciseVC: exerciseVC)
+        exerciseCoordinator?.navigationController = tabBarCoordinator?.navigationController
+        exerciseCoordinator?.start()
     }
     
     // Отображение статистики по полученной голосовой команде
     private func handleShowExerciseActivity() {
-        tabBarController?.selectedViewController = statsVC
+        tabBarCoordinator?.showStatsVC()
     }
     
 }
